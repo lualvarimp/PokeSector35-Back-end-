@@ -1,59 +1,40 @@
 /* ============================================================================
    POKÉSECTOR ADMIN PANEL - DASHBOARD CSS
-   Complementa a layout.css
-   ============================================================================ */
-
-/* ============================================================================
-   HEADER
    ============================================================================ */
 
 .dashboard-header {
   margin-bottom: 3rem;
   text-align: center;
-
-  @media (max-width: 768px) {
-    margin-bottom: 2rem;
-  }
 }
 
 .dashboard-title {
-  font-size: var(--font-size-xxl);
+  font-size: 2rem;
   font-weight: 700;
   color: var(--green-dark);
   margin-bottom: 0.5rem;
 }
 
 .dashboard-subtitle {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 1rem;
+  color: var(--green-dark);
 }
-
-/* ============================================================================
-   STATS GRID
-   ============================================================================ */
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(clamp(15rem, 20rem + 5vw, 22rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
 }
 
 .stat-card {
-  background-color: var(--bg-secondary);
-  border: 2px solid var(--green-accent);
+  background-color: var(--white);
+  border: 2px solid var(--green-med);
   border-radius: 1rem;
   padding: 2rem;
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
     box-shadow: 0 6px 20px rgba(129, 170, 99, 0.3);
@@ -71,35 +52,27 @@
 }
 
 .stat-label {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 1rem;
+  color: var(--black);
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
 .stat-value {
-  font-size: var(--font-size-xl);
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--green-dark);
   margin-bottom: 0.5rem;
 }
 
 .stat-change {
-  font-size: clamp(0.75rem, 0.7rem + 0.3vw, 0.875rem);
+  font-size: 0.875rem;
   color: var(--green-med);
   font-weight: 600;
 }
 
-/* ============================================================================
-   DASHBOARD SECTIONS
-   ============================================================================ */
-
 .dashboard-section {
   margin-bottom: 3rem;
-
-  @media (max-width: 768px) {
-    margin-bottom: 2rem;
-  }
 }
 
 .section-header {
@@ -109,62 +82,47 @@
   margin-bottom: 2rem;
   flex-wrap: wrap;
   gap: 1rem;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 1.5rem;
-  }
 }
 
 .section-title {
-  font-size: var(--font-size-xl);
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--green-dark);
 }
 
 .section-subtitle {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 1rem;
+  color: var(--black);
   margin: 0;
 }
 
 .section-link {
-  color: var(--green-accent);
+  color: var(--green-med);
   font-weight: 600;
-  font-size: var(--font-size-base);
-  transition: var(--transition);
+  font-size: 1rem;
+  transition: all 0.3s ease;
 
   &:hover {
-    color: var(--green-med);
+    color: var(--green-dark);
     text-shadow: 0 0 8px var(--green-light);
   }
 }
 
-/* ============================================================================
-   TOP PLAYERS
-   ============================================================================ */
-
 .top-players {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(clamp(15rem, 20rem + 5vw, 22rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
   gap: 2rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
 }
 
 .player-card {
-  background-color: var(--bg-secondary);
-  border: 2px solid var(--green-accent);
+  background-color: var(--white);
+  border: 2px solid var(--green-med);
   border-radius: 1rem;
   padding: 1.5rem;
   display: flex;
   gap: 1.5rem;
   align-items: center;
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
     box-shadow: 0 6px 20px rgba(129, 170, 99, 0.3);
@@ -182,54 +140,43 @@
 }
 
 .player-name {
-  font-size: var(--font-size-lg);
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--green-dark);
   margin-bottom: 0.5rem;
 }
 
 .player-stats {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 1rem;
+  color: var(--black);
 
-  span {
-    &:not(:last-child) {
-      margin-right: 0.5rem;
-    }
+  span:not(:last-child) {
+    margin-right: 0.5rem;
   }
 }
-
-/* ============================================================================
-   DIFFICULTY GRID
-   ============================================================================ */
 
 .difficulty-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(clamp(15rem, 20rem + 5vw, 22rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
   gap: 2rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
 }
 
 .difficulty-card {
-  background-color: var(--bg-secondary);
-  border: 2px solid var(--green-accent);
+  background-color: var(--white);
+  border: 2px solid var(--green-med);
   border-radius: 1rem;
   padding: 1.5rem;
 }
 
 .difficulty-label {
-  font-size: var(--font-size-base);
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .difficulty-value {
-  font-size: var(--font-size-xl);
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--green-dark);
   margin-bottom: 1rem;
@@ -238,36 +185,25 @@
 .difficulty-bar {
   width: 100%;
   height: 0.5rem;
-  background-color: var(--border-color);
+  background-color: var(--white);
   border-radius: 0.25rem;
   overflow: hidden;
 }
 
 .difficulty-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--green-accent), var(--green-med));
+  background: linear-gradient(90deg, var(--green-med), var(--green-dark));
   border-radius: 0.25rem;
   transition: width 0.5s ease;
 }
 
-/* ============================================================================
-   DASHBOARD ACTIONS
-   ============================================================================ */
-
 .dashboard-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(clamp(15rem, 20rem + 5vw, 22rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
   gap: 2rem;
   margin-top: 3rem;
   padding-top: 2rem;
-  border-top: 2px solid var(--green-accent);
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-  }
+  border-top: 2px solid var(--green-med);
 }
 
 .action-button {
@@ -277,13 +213,13 @@
   justify-content: center;
   gap: 1rem;
   padding: 2rem;
-  background: linear-gradient(135deg, var(--green-accent), var(--green-med));
+  background: linear-gradient(135deg, var(--green-med), var(--green-dark));
   color: var(--white);
   border-radius: 1rem;
   text-decoration: none;
   font-weight: 600;
-  font-size: var(--font-size-lg);
-  transition: var(--transition);
+  font-size: 1.25rem;
+  transition: all 0.3s ease;
   cursor: pointer;
 
   span:first-child {
@@ -291,7 +227,7 @@
   }
 
   &:hover {
-    background: linear-gradient(135deg, var(--green-med), var(--green-dark));
+    background: linear-gradient(135deg, var(--green-dark), var(--green-light));
     box-shadow: 0 6px 20px rgba(129, 170, 99, 0.4);
     transform: translateY(-3px);
   }
@@ -300,26 +236,6 @@
     transform: translateY(-1px);
   }
 }
-
-.action-users {
-  background: linear-gradient(135deg, var(--green-accent), var(--green-med));
-
-  &:hover {
-    background: linear-gradient(135deg, var(--green-med), var(--green-dark));
-  }
-}
-
-.action-ranking {
-  background: linear-gradient(135deg, var(--green-accent), var(--green-med));
-
-  &:hover {
-    background: linear-gradient(135deg, var(--green-med), var(--green-dark));
-  }
-}
-
-/* ============================================================================
-   DASHBOARD CONTAINER
-   ============================================================================ */
 
 .dashboard-container {
   width: 100%;

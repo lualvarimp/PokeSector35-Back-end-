@@ -1,66 +1,49 @@
-/* ============================================================================
-   POKÉSECTOR ADMIN PANEL - LOGIN CSS (ESTILOS ESPECÍFICOS)
-   Complementa a layout.css
-   ============================================================================ */
+/* Styles by Luis Alonso */
 
-/* ============================================================================
-   NAVBAR - Ocultar menú en login
-   ============================================================================ */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
 nav.navbar ul {
   display: none;
 }
-
-/* ============================================================================
-   MAIN - Formulario de Login Centrado
-   ============================================================================ */
 
 .login-main {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(1rem, 2rem + 2vw, 3rem);
-  background-color: var(--bg-primary);
-  transition: var(--transition);
+  padding: 3rem;
+
+  transition: all 0.3s ease;
 }
 
 .login-container {
   width: 100%;
-  max-width: clamp(20rem, 25rem + 5vw, 28rem);
+  max-width: 28rem;
 }
 
 .login-card {
-  background-color: var(--bg-secondary);
-  border: 2px solid var(--green-accent);
-  border-radius: 1rem;
-  padding: clamp(1.5rem, 2rem + 1vw, 2.5rem);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  transition: var(--transition);
-
-  &:hover {
-    box-shadow: 0 6px 20px rgba(129, 170, 99, 0.3);
-  }
+  padding: 2.5rem;
+  transition: all 0.3s ease;
 }
 
 .login-title {
-  font-size: var(--font-size-xxl);
-  font-weight: 700;
+  font-size: 2rem;
   color: var(--green-dark);
   text-align: center;
   margin-bottom: 0.5rem;
 }
 
 .login-subtitle {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
-  text-align: center;
   margin-bottom: 2rem;
+  font-size: 1rem;
+  color: var(--green-dark);
+  text-align: center;
+  text-shadow: 0 0 0.2rem var(--green-med);
 }
-
-/* ============================================================================
-   FORMULARIO
-   ============================================================================ */
 
 .login-form {
   display: flex;
@@ -74,32 +57,38 @@ nav.navbar ul {
   gap: 0.5rem;
 
   label {
-    font-size: var(--font-size-base);
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.1rem;
+    color: var(--green-dark);
+    text-shadow: 0 0 0.2rem var(--green-med);
   }
 
   input {
-    font-family: var(--font-family);
-    font-size: var(--font-size-base);
+    font-family: var(--main-font);
+    font-size: 1rem;
     padding: 0.75rem 1rem;
-    border: 2px solid var(--border-color);
-    border-radius: 0.5rem;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    transition: var(--transition);
+    border: 0.15rem solid var(--white);
+    border-radius: 0.2rem;
+    background-color: var(--green-white);
+    color: var(--green-dark);
+    transition: all 0.3s ease;
 
     &:focus {
       outline: none;
-      border-color: var(--green-accent);
-      box-shadow: 0 0 0 3px rgba(129, 170, 99, 0.2);
-    }
-
-    &::placeholder {
-      color: var(--text-secondary);
-      opacity: 0.6;
+      border: 0.15rem solid var(--green-med);
+      box-shadow: 0 0 0.2rem var(--green-med);
+      text-shadow: 0 0 0.1rem var(--green-med);
     }
   }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  font-family: var(--main-font);
+  -webkit-text-fill-color: var(--text-primary);
+  -webkit-box-shadow: 0 0 0 10rem var(--green-white) inset;
 }
 
 .form-actions {
@@ -108,22 +97,22 @@ nav.navbar ul {
 
 .btn-login {
   width: 100%;
-  font-family: var(--font-family);
-  font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-family: var(--main-font);
+  font-size: 1.25rem;
+  letter-spacing: 0.1rem;
+  font-weight: 400;
+  text-shadow: 0 0 0.2rem var(--green-med);
   padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, var(--green-accent), var(--green-med));
-  color: var(--white);
-  border: none;
-  border-radius: 0.5rem;
+  background: none;
+  color: var(--green-dark);
+  border: 0.15rem solid var(--green-med);
+  border-radius: 0.2rem;
   cursor: pointer;
-  transition: var(--transition);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0.3rem var(--green-dark);
 
   &:hover {
-    background: linear-gradient(135deg, var(--green-med), var(--green-dark));
-    box-shadow: 0 4px 12px rgba(129, 170, 99, 0.4);
-    transform: translateY(-2px);
+    animation: blink-logo 7s linear;
   }
 
   &:active {
@@ -137,10 +126,6 @@ nav.navbar ul {
     transform: none;
   }
 }
-
-/* ============================================================================
-   MENSAJES DE ERROR/ÉXITO
-   ============================================================================ */
 
 .message-area {
   margin-top: 1.5rem;
@@ -159,7 +144,7 @@ nav.navbar ul {
   &.success {
     padding: 0.75rem 1rem;
     background-color: rgba(129, 170, 99, 0.1);
-    border: 2px solid var(--green-accent);
+    border: 2px solid var(--green-med);
     border-radius: 0.5rem;
     color: var(--green-dark);
     font-weight: 600;
@@ -167,27 +152,17 @@ nav.navbar ul {
   }
 }
 
-/* ============================================================================
-   FOOTER
-   ============================================================================ */
-
 .login-footer {
-  background-color: var(--bg-secondary);
-  color: var(--text-secondary);
+
+  color: var(--green-dark);
   padding: 1rem;
   text-align: center;
-  border-top: 2px solid var(--green-accent);
-  font-size: clamp(0.75rem, 0.7rem + 0.3vw, 0.875rem);
-  transition: var(--transition);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 0.1rem var(--green-med);
 
   p {
     margin: 0;
   }
 }
 
-/* Override: Body para login (sin navbar) */
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}

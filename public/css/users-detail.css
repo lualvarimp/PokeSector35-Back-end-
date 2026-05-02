@@ -1,10 +1,5 @@
 /* ============================================================================
    POKÉSECTOR ADMIN PANEL - USERS DETAIL CSS
-   Complementa a layout.css
-   ============================================================================ */
-
-/* ============================================================================
-   HEADER
    ============================================================================ */
 
 .users-detail-container {
@@ -13,10 +8,6 @@
 
 .detail-header {
   margin-bottom: 2rem;
-
-  @media (max-width: 768px) {
-    margin-bottom: 1.5rem;
-  }
 }
 
 .header-top {
@@ -30,76 +21,62 @@
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: var(--green-accent);
+  background-color: var(--green-med);
   color: var(--white);
   border-radius: 0.5rem;
   font-weight: 600;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   text-decoration: none;
+  cursor: pointer;
+  border: none;
 
   &:hover {
-    background-color: var(--green-med);
+    background-color: var(--green-dark);
     transform: translateX(-2px);
   }
 }
 
 .detail-title {
-  font-size: var(--font-size-xxl);
+  font-size: 2rem;
   font-weight: 700;
   color: var(--green-dark);
   margin: 0;
 }
 
 .detail-subtitle {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 1rem;
+  color: var(--black);
   margin: 0;
 }
 
-/* ============================================================================
-   SECCIONES
-   ============================================================================ */
-
 .detail-section {
   margin-bottom: 3rem;
-
-  @media (max-width: 768px) {
-    margin-bottom: 2rem;
-  }
 }
 
 .section-title {
-  font-size: var(--font-size-xl);
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--green-dark);
   margin-bottom: 1.5rem;
 }
 
-/* ============================================================================
-   TABLA DE DETALLES
-   ============================================================================ */
-
 .table-wrapper {
-  background-color: var(--bg-secondary);
-  border: 2px solid var(--green-accent);
+  background-color: var(--white);
+  border: 2px solid var(--green-med);
   border-radius: 1rem;
   overflow: hidden;
   width: 100%;
   margin-bottom: 2rem;
-
-  @media (max-width: 768px) {
-    border-radius: 0.5rem;
-  }
 }
 
 .detail-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--font-size-base);
+  font-size: 1rem;
 
   tr {
-    border-bottom: 1px solid var(--border-color);
-    transition: var(--transition);
+    border-bottom: 1px solid var(--white);
+    transition: all 0.3s ease;
 
     &:hover {
       background-color: rgba(129, 170, 99, 0.1);
@@ -119,41 +96,29 @@
       color: var(--green-dark);
       width: 20%;
       white-space: nowrap;
-
-      @media (max-width: 768px) {
-        width: 30%;
-      }
     }
 
     &.actions {
       text-align: right;
       width: 20%;
-
-      @media (max-width: 768px) {
-        width: auto;
-      }
     }
   }
 }
 
-/* ============================================================================
-   BOTONES EDITAR
-   ============================================================================ */
-
 .btn-edit {
   padding: 0.5rem 1rem;
-  background-color: var(--green-accent);
+  background-color: var(--green-med);
   color: var(--white);
   border: none;
   border-radius: 0.35rem;
-  font-size: clamp(0.75rem, 0.7rem + 0.3vw, 0.875rem);
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--green-med);
+    background-color: var(--green-dark);
     transform: translateY(-1px);
   }
 
@@ -162,30 +127,20 @@
   }
 }
 
-/* ============================================================================
-   CARD POKÉMON
-   ============================================================================ */
-
 .pokemon-card {
-  background-color: var(--bg-secondary);
-  border: 2px solid var(--green-accent);
+  background-color: var(--white);
+  border: 2px solid var(--green-med);
   border-radius: 1rem;
   padding: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
     box-shadow: 0 6px 20px rgba(129, 170, 99, 0.3);
     transform: translateY(-2px);
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 1.5rem;
-    gap: 1.5rem;
   }
 }
 
@@ -200,14 +155,14 @@
 }
 
 .count-number {
-  font-size: var(--font-size-xxl);
+  font-size: 2rem;
   font-weight: 700;
   color: var(--green-dark);
 }
 
 .count-label {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 1rem;
+  color: var(--black);
 }
 
 .pokemon-actions {
@@ -220,36 +175,27 @@
   border-radius: 0.5rem;
   font-weight: 600;
   text-decoration: none;
-  transition: var(--transition);
-  font-size: var(--font-size-base);
+  transition: all 0.3s ease;
+  font-size: 1rem;
   cursor: pointer;
 
   &.btn-primary {
-    background-color: var(--green-accent);
+    background-color: var(--green-med);
     color: var(--white);
 
     &:hover {
-      background-color: var(--green-med);
+      background-color: var(--green-dark);
       box-shadow: 0 4px 12px rgba(129, 170, 99, 0.4);
       transform: translateY(-2px);
     }
   }
 }
 
-/* ============================================================================
-   BOTONES DE ACCIÓN PRINCIPALES
-   ============================================================================ */
-
 .detail-actions {
   display: flex;
   gap: 1rem;
   padding-top: 2rem;
-  border-top: 2px solid var(--green-accent);
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 1rem;
-  }
+  border-top: 2px solid var(--green-med);
 }
 
 .btn-danger {
@@ -259,11 +205,11 @@
   color: var(--white);
   border: none;
   border-radius: 0.5rem;
-  font-size: var(--font-size-base);
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
     opacity: 0.85;
@@ -279,18 +225,18 @@
 .btn-success {
   flex: 1;
   padding: 1rem;
-  background-color: var(--green-accent);
+  background-color: var(--green-med);
   color: var(--white);
   border: none;
   border-radius: 0.5rem;
-  font-size: var(--font-size-base);
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--green-med);
+    background-color: var(--green-dark);
     box-shadow: 0 4px 12px rgba(129, 170, 99, 0.4);
     transform: translateY(-2px);
   }
@@ -299,10 +245,6 @@
     transform: translateY(0);
   }
 }
-
-/* ============================================================================
-   MODALES
-   ============================================================================ */
 
 .modal {
   position: fixed;
@@ -322,8 +264,8 @@
 }
 
 .modal-content {
-  background-color: var(--bg-secondary);
-  border: 2px solid var(--green-accent);
+  background-color: var(--white);
+  border: 2px solid var(--green-med);
   border-radius: 1rem;
   width: 90%;
   max-width: 500px;
@@ -344,14 +286,14 @@
 
 .modal-header {
   padding: 1.5rem;
-  border-bottom: 2px solid var(--green-accent);
+  border-bottom: 2px solid var(--green-med);
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   h2 {
     margin: 0;
-    font-size: var(--font-size-xl);
+    font-size: 1.5rem;
     color: var(--green-dark);
   }
 }
@@ -361,8 +303,8 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--text-secondary);
-  transition: var(--transition);
+  color: var(--black);
+  transition: all 0.3s ease;
 
   &:hover {
     color: var(--green-dark);
@@ -375,7 +317,7 @@
 
 .modal-footer {
   padding: 1.5rem;
-  border-top: 2px solid var(--border-color);
+  border-top: 2px solid var(--white);
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
@@ -389,24 +331,24 @@
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: var(--text-primary);
-    font-size: var(--font-size-base);
+    font-size: 1rem;
   }
 
   input,
   select {
     font-family: var(--font-family);
-    font-size: var(--font-size-base);
+    font-size: 1rem;
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--white);
     border-radius: 0.5rem;
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    transition: var(--transition);
+    transition: all 0.3s ease;
 
     &:focus {
       outline: none;
-      border-color: var(--green-accent);
+      border-color: var(--green-med);
       box-shadow: 0 0 0 3px rgba(129, 170, 99, 0.2);
     }
   }
@@ -414,33 +356,33 @@
 
 .btn-secondary {
   padding: 0.75rem 1.5rem;
-  background-color: var(--border-color);
+  background-color: var(--white);
   color: var(--text-primary);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--text-secondary);
+    background-color: var(--black);
     color: var(--bg-primary);
   }
 }
 
 .btn-primary {
   padding: 0.75rem 1.5rem;
-  background-color: var(--green-accent);
+  background-color: var(--green-med);
   color: var(--white);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--green-med);
+    background-color: var(--green-dark);
   }
 }

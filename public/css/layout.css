@@ -1,55 +1,58 @@
-/* ============================================================================
-   POKÉSECTOR ADMIN PANEL - LAYOUT CSS
-   CSS Nesting | Variables Root | Responsive con clamp()
-   ============================================================================ */
+/* Styles by Luís Alonso */
 
+/* =============== IMPORTED FONTS =============== */
+@font-face {
+  font-family: 'IBM EGA 8x8';
+  src: url('/fonts/ibm-ega-8x8.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ATI 8x16';
+  src: url('/fonts/ati-8x16.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Toshiba 8x14';
+  src: url('/fonts/toshiba-8x14.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* =============== VARIABLES =============== */
 :root {
-  /* Colores base (intocables) */
+  --font-family: 'JetBrains Mono', monospace;
+  --logo-title: 'IBM EGA 8x8', monospace;
+  --header-title: 'ATI 8x16', monospace;
+  --main-font: 'Toshiba 8x14', monospace;
   --black: #071105;
-  --white: #fcfcfc;
+  --white: #d5f4bc;
   --red: #971010;
-
-  /* Paleta verde fósforo */
   --green-dark: #3D5230;
   --green-med: #6F9055;
-  --green-light: #A1CA82;
-  --green-accent: #81AA63;
-  --green-bg: #445A36;
+  --green-light: #b5db98;
+  --green-white: #d5f4bc;
+  --green-black: #132a0e;
 
-  /* Tema claro (por defecto) */
-  --bg-primary: var(--white);
-  --bg-secondary: #f5f5f5;
-  --text-primary: var(--black);
-  --text-secondary: #333333;
-  --border-color: #d0d0d0;
-
-  /* Tema oscuro */
-  --bg-primary-dark: var(--black);
-  --bg-secondary-dark: #1a1a1a;
-  --text-primary-dark: var(--white);
-  --text-secondary-dark: #cccccc;
-  --border-color-dark: #333333;
-
-  /* Tipografía */
-  --font-family: 'JetBrains Mono', monospace;
-  --font-size-base: clamp(0.875rem, 0.75rem + 0.5vw, 1rem);
-  --font-size-lg: clamp(1rem, 0.875rem + 0.75vw, 1.25rem);
-  --font-size-xl: clamp(1.25rem, 1rem + 1vw, 1.5rem);
-  --font-size-xxl: clamp(1.5rem, 1.25rem + 1.5vw, 2rem);
-
-  /* Transiciones */
-  --transition: all 0.3s ease;
+  /* LIGHT THEME */
+  --bg-primary: #e8fbd9;
+  --text-primary: #0f1b0c;
 }
 
-/* Tema oscuro activado */
+/* DARK THEME */
 html.dark-mode {
-  --bg-primary: var(--bg-primary-dark);
-  --bg-secondary: var(--bg-secondary-dark);
-  --text-primary: var(--text-primary-dark);
-  --text-secondary: var(--text-secondary-dark);
-  --border-color: var(--border-color-dark);
+  --bg-primary: #0f1b0c;
+  --text-primary: #e8fbd9;
+  --green-dark: #A1CA82;
+  --green-light: #3D5230;
+  --green-black: #d5f4bc;
+  --green-white: #132a0e;
 }
 
+/* =============== GENERAL STLES =============== */
 * {
   margin: 0;
   padding: 0;
@@ -57,42 +60,56 @@ html.dark-mode {
 }
 
 html {
-  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-primary);
 }
 
 body {
-  font-family: var(--font-family);
-  font-size: var(--font-size-base);
+  width: 100%;
+  max-width: 50rem;
+  font-family: var(--main-font);
+  font-size: 1rem;
   color: var(--text-primary);
-  background-color: var(--bg-primary);
-  transition: var(--transition);
-  line-height: 1.6;
+  transition: all 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--green-dark);
+  font-family: var(--header-title);
+  font-weight: 400;
+  text-shadow: 0 0 0.3rem var(--green-med);
+  animation: blink 6s infinite;
 }
 
 a {
   color: var(--green-dark);
   text-decoration: none;
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
     color: var(--green-med);
   }
 }
 
-/* ============================================================================
-   NAVBAR / NAVEGACIÓN
-   ============================================================================ */
+/* =============== NAVBAR =============== */
 
-nav.navbar {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+.navbar {
+  color: var(--green-dark);
   padding: 1rem 1.5rem;
   position: sticky;
   top: 0;
+  transition: all 0.3s ease;
   z-index: 100;
-  transition: var(--transition);
+  
 
-  > div {
+  >div {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -101,20 +118,10 @@ nav.navbar {
   }
 
   .logo-placeholder {
-    width: 8rem;
-    height: 3rem;
-    background: linear-gradient(135deg, var(--green-accent), var(--green-med));
-    border: 2px solid var(--green-light);
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(0.75rem, 0.5rem + 1vw, 0.9rem);
-    color: var(--white);
-    font-weight: 600;
-    text-align: center;
-    padding: 0.5rem;
-    flex-shrink: 0;
+    font-family: var(--logo-title);
+    color: var(--green-dark);
+    text-shadow: 0 0 0.5rem var(--green-med);
+    animation: blink-logo 5s infinite;
 
     a {
       color: inherit;
@@ -139,22 +146,20 @@ nav.navbar {
       height: 0.25rem;
       background-color: var(--text-primary);
       border-radius: 0.125rem;
-      transition: var(--transition);
+      transition: all 0.3s ease;
     }
 
-    &.active {
-      span {
-        &:nth-of-type(1) {
-          transform: rotate(45deg) translate(0.7rem, 0.7rem);
-        }
+    &.active span {
+      &:nth-of-type(1) {
+        transform: rotate(45deg) translate(0.7rem, 0.7rem);
+      }
 
-        &:nth-of-type(2) {
-          opacity: 0;
-        }
+      &:nth-of-type(2) {
+        opacity: 0;
+      }
 
-        &:nth-of-type(3) {
-          transform: rotate(-45deg) translate(0.5rem, -0.5rem);
-        }
+      &:nth-of-type(3) {
+        transform: rotate(-45deg) translate(0.5rem, -0.5rem);
       }
     }
 
@@ -167,7 +172,7 @@ nav.navbar {
   ul {
     display: flex;
     list-style: none;
-    gap: clamp(0.5rem, 0.25rem + 1vw, 2rem);
+    gap: 1.5rem;
     align-items: center;
     flex: 1;
     justify-content: flex-end;
@@ -184,7 +189,6 @@ nav.navbar {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.3s ease;
-      margin: 0;
 
       &.active {
         max-height: 500px;
@@ -194,7 +198,7 @@ nav.navbar {
     li {
       @media (max-width: 768px) {
         width: 100%;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--white);
 
         &:last-child {
           border-bottom: none;
@@ -206,7 +210,7 @@ nav.navbar {
         font-weight: 500;
         padding: 0.5rem 1rem;
         border-radius: 0.3rem;
-        transition: var(--transition);
+        transition: all 0.3s ease;
         display: inline-block;
 
         &:hover {
@@ -230,16 +234,13 @@ nav.navbar {
     margin-left: 1rem;
     order: 3;
 
-    @media (max-width: 480px) {
-      margin-left: 0.5rem;
-    }
-
     input {
       display: none;
 
-      &:checked + label {
-        background-color: var(--green-dark);
-        border-color: var(--green-dark);
+      &:checked+label {
+        background-color: var(--green-black);
+        border-color: var(--green-black);
+        box-shadow: 0 0 1rem var(--green-med);
 
         &::before {
           transform: translateX(1.75rem);
@@ -247,20 +248,12 @@ nav.navbar {
         }
 
         &::after {
-          content: 'ON';
+          content: '';
           position: absolute;
           right: 0.35rem;
           top: 50%;
           transform: translateY(-50%);
-          font-size: 0.65rem;
-          font-weight: 700;
-          color: var(--green-dark);
-          letter-spacing: 0.05rem;
         }
-      }
-
-      &:hover + label {
-        box-shadow: 0 0 12px var(--green-light);
       }
     }
 
@@ -271,11 +264,11 @@ nav.navbar {
       justify-content: flex-start;
       width: 3.75rem;
       height: 1.875rem;
-      background-color: var(--green-med);
-      border: 2px solid var(--green-dark);
-      border-radius: 2rem;
+      background-color: var(--green-dark);
+      border: 0.1rem solid var(--green-dark);
+      border-radius: 0.4rem;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.3s ease;
       padding: 0 0.5rem;
 
       &::before {
@@ -285,14 +278,14 @@ nav.navbar {
         width: 1.375rem;
         height: 1.375rem;
         background-color: var(--white);
-        border-radius: 50%;
-        transition: var(--transition);
+        border-radius: 0.3rem;
+        transition: all 0.3s ease;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         z-index: 2;
       }
 
       &::after {
-        content: 'OFF';
+        content: '';
         position: absolute;
         left: 0.5rem;
         top: 50%;
@@ -302,17 +295,13 @@ nav.navbar {
         color: var(--green-dark);
         letter-spacing: 0.05rem;
       }
-
-      &:hover {
-        box-shadow: 0 0 12px var(--green-light);
-      }
     }
   }
 
   @media (max-width: 480px) {
     padding: 1rem 0.5rem;
 
-    > div {
+    >div {
       position: relative;
     }
 
@@ -323,33 +312,42 @@ nav.navbar {
       width: 6rem;
       font-size: 0.7rem;
     }
-
-    ul {
-      margin: 0;
-    }
   }
 }
 
 /* ============================================================================
-   CONTENIDO PRINCIPAL
+   MAIN CONTENT
    ============================================================================ */
 
 main.main-content {
   min-height: calc(100vh - 6rem);
-  padding: 2rem clamp(1rem, 1rem + 3vw, 3rem);
+  padding: 2rem 3rem;
   max-width: 75rem;
   margin: 0 auto;
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   @media (max-width: 480px) {
     padding: 1rem 1rem;
   }
 }
 
-@media (max-width: 480px) {
-  :root {
-    --font-size-base: 0.875rem;
-  }
+/* =============== ANIMATIONS =============== */
+@keyframes blink {
+  0%   { opacity: 100%; }
+  1%   { opacity: 0%; }
+  2%   { opacity: 100%; }
+  100% { opacity: 100%; }
+}
+
+@keyframes blink-logo {
+  0%   { opacity: 100%; }
+  0.5% { opacity: 0%; }
+  1%   { opacity: 100%; }
+  1.5% { opacity: 0%; }
+  2%   { opacity: 100%; }
+  2.5% { opacity: 0%; }
+  5%   { opacity: 100%; }
+  100% { opacity: 100%; }
 }

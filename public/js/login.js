@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('refresh_token', data.refresh_token);
         localStorage.setItem('user_id', data.user_id);
 
-        showMessage('¡Login exitoso! Redirigiendo...', 'success');
+        showMessage('¡Login correcto! Redirigiendo...', 'success');
 
         // Obtener información del usuario para determinar su rol
         const userResponse = await fetch(`/api/users/${data.user_id}`, {

@@ -1,10 +1,5 @@
 /* ============================================================================
    POKÉSECTOR ADMIN PANEL - POKÉDEX CSS
-   Complementa a layout.css
-   ============================================================================ */
-
-/* ============================================================================
-   HEADER
    ============================================================================ */
 
 .pokedex-container {
@@ -13,10 +8,6 @@
 
 .pokedex-header {
   margin-bottom: 2rem;
-
-  @media (max-width: 768px) {
-    margin-bottom: 1.5rem;
-  }
 }
 
 .header-top {
@@ -30,37 +21,33 @@
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: var(--green-accent);
+  background-color: var(--green-med);
   color: var(--white);
   border-radius: 0.5rem;
   font-weight: 600;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   text-decoration: none;
   cursor: pointer;
   border: none;
 
   &:hover {
-    background-color: var(--green-med);
+    background-color: var(--green-dark);
     transform: translateX(-2px);
   }
 }
 
 .pokedex-title {
-  font-size: var(--font-size-xxl);
+  font-size: 2rem;
   font-weight: 700;
   color: var(--green-dark);
   margin: 0;
 }
 
 .pokedex-subtitle {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 1rem;
+  color: var(--black);
   margin: 0;
 }
-
-/* ============================================================================
-   CONTROLES
-   ============================================================================ */
 
 .pokedex-controls {
   display: flex;
@@ -69,12 +56,6 @@
   gap: 1.5rem;
   margin-bottom: 2rem;
   flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
 }
 
 .controls-left {
@@ -82,12 +63,6 @@
   gap: 1.5rem;
   flex: 1;
   min-width: 0;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    width: 100%;
-    gap: 1rem;
-  }
 }
 
 .controls-right {
@@ -97,31 +72,27 @@
 .search-group {
   flex: 1;
   min-width: 0;
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
 }
 
 .search-input {
   font-family: var(--font-family);
-  font-size: var(--font-size-base);
+  font-size: 1rem;
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--white);
   border-radius: 0.5rem;
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: var(--green-accent);
+    border-color: var(--green-med);
     box-shadow: 0 0 0 3px rgba(129, 170, 99, 0.2);
   }
 
   &::placeholder {
-    color: var(--text-secondary);
+    color: var(--black);
     opacity: 0.6;
   }
 }
@@ -133,54 +104,48 @@
   white-space: nowrap;
 
   label {
-    font-size: var(--font-size-base);
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
   }
 }
 
 .filter-select {
   font-family: var(--font-family);
-  font-size: var(--font-size-base);
+  font-size: 1rem;
   padding: 0.5rem 1rem;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--white);
   border-radius: 0.5rem;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
-    border-color: var(--green-accent);
+    border-color: var(--green-med);
   }
 
   &:focus {
     outline: none;
-    border-color: var(--green-accent);
+    border-color: var(--green-med);
     box-shadow: 0 0 0 3px rgba(129, 170, 99, 0.2);
   }
 }
 
 .btn-add {
   padding: 0.75rem 1.5rem;
-  background-color: var(--green-accent);
+  background-color: var(--green-med);
   color: var(--white);
   border: none;
   border-radius: 0.5rem;
-  font-size: var(--font-size-base);
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--green-med);
+    background-color: var(--green-dark);
     box-shadow: 0 4px 12px rgba(129, 170, 99, 0.4);
     transform: translateY(-2px);
   }
@@ -190,30 +155,22 @@
   }
 }
 
-/* ============================================================================
-   TABLA DE POKÉMON
-   ============================================================================ */
-
 .table-wrapper {
-  background-color: var(--bg-secondary);
-  border: 2px solid var(--green-accent);
+  background-color: var(--white);
+  border: 2px solid var(--green-med);
   border-radius: 1rem;
   overflow: hidden;
   width: 100%;
   margin-bottom: 2rem;
-
-  @media (max-width: 768px) {
-    border-radius: 0.5rem;
-  }
 }
 
 .pokedex-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--font-size-base);
+  font-size: 1rem;
 
   thead {
-    background-color: var(--green-bg);
+    background-color: var(--green-dark);
     color: var(--white);
     font-weight: 600;
   }
@@ -221,23 +178,17 @@
   th {
     padding: 1.25rem 1rem;
     text-align: left;
-    border-bottom: 2px solid var(--green-accent);
+    border-bottom: 2px solid var(--green-med);
   }
 
   td {
     padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--white);
     color: var(--text-primary);
-
-    &.loading {
-      text-align: center;
-      color: var(--text-secondary);
-      padding: 2rem 1rem;
-    }
   }
 
   tbody tr {
-    transition: var(--transition);
+    transition: all 0.3s ease;
 
     &:hover {
       background-color: rgba(129, 170, 99, 0.1);
@@ -249,21 +200,17 @@
   }
 }
 
-/* ============================================================================
-   BOTONES ACCIONES
-   ============================================================================ */
-
 .btn-small-delete {
   padding: 0.5rem 1rem;
   background-color: var(--red);
   color: var(--white);
   border: none;
   border-radius: 0.35rem;
-  font-size: clamp(0.75rem, 0.7rem + 0.3vw, 0.875rem);
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
     opacity: 0.85;
@@ -275,22 +222,14 @@
   }
 }
 
-/* ============================================================================
-   FOOTER
-   ============================================================================ */
-
 .pokedex-footer {
   display: flex;
   justify-content: center;
   padding: 1.5rem;
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
-  border-top: 2px solid var(--green-accent);
+  font-size: 1rem;
+  color: var(--black);
+  border-top: 2px solid var(--green-med);
 }
-
-/* ============================================================================
-   MODALES
-   ============================================================================ */
 
 .modal {
   position: fixed;
@@ -310,8 +249,8 @@
 }
 
 .modal-content {
-  background-color: var(--bg-secondary);
-  border: 2px solid var(--green-accent);
+  background-color: var(--white);
+  border: 2px solid var(--green-med);
   border-radius: 1rem;
   width: 90%;
   max-width: 500px;
@@ -332,14 +271,14 @@
 
 .modal-header {
   padding: 1.5rem;
-  border-bottom: 2px solid var(--green-accent);
+  border-bottom: 2px solid var(--green-med);
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   h2 {
     margin: 0;
-    font-size: var(--font-size-xl);
+    font-size: 1.5rem;
     color: var(--green-dark);
   }
 }
@@ -349,8 +288,8 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--text-secondary);
-  transition: var(--transition);
+  color: var(--black);
+  transition: all 0.3s ease;
 
   &:hover {
     color: var(--green-dark);
@@ -363,7 +302,7 @@
 
 .modal-footer {
   padding: 1.5rem;
-  border-top: 2px solid var(--border-color);
+  border-top: 2px solid var(--white);
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
@@ -377,69 +316,58 @@
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: var(--text-primary);
-    font-size: var(--font-size-base);
+    font-size: 1rem;
   }
 
   input,
   select {
     font-family: var(--font-family);
-    font-size: var(--font-size-base);
+    font-size: 1rem;
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--white);
     border-radius: 0.5rem;
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    transition: var(--transition);
+    transition: all 0.3s ease;
 
     &:focus {
       outline: none;
-      border-color: var(--green-accent);
+      border-color: var(--green-med);
       box-shadow: 0 0 0 3px rgba(129, 170, 99, 0.2);
     }
-  }
-
-  input[type='checkbox'] {
-    width: auto;
-    margin-right: 0.5rem;
-    cursor: pointer;
-  }
-
-  span {
-    cursor: pointer;
-    user-select: none;
   }
 }
 
 .btn-secondary {
   padding: 0.75rem 1.5rem;
-  background-color: var(--border-color);
+  background-color: var(--white);
   color: var(--text-primary);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--text-secondary);
+    background-color: var(--black);
     color: var(--bg-primary);
   }
 }
 
 .btn-primary {
   padding: 0.75rem 1.5rem;
-  background-color: var(--green-accent);
+  background-color: var(--green-med);
   color: var(--white);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: var(--transition);
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--green-med);
+    background-color: var(--green-dark);
   }
 }

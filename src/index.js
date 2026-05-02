@@ -1,67 +1,112 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+import sequelize from './config/database.js';
+import './models/index.js';
+
+import cors from 'cors';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swaggerConfig.js';
-import authRoutes from './routes/authRoutes.js';
-import userRoutes from './routes/userRoutes.js';
-import gameSlotRoutes from './routes/gameSlotRoutes.js';
-import capturedPokemonRoutes from './routes/capturedPokemonRoutes.js';
-import rankingRoutes from './routes/rankingRoutes.js';
-import replayRoutes from './routes/replayRoutes.js';
+import routes from './routes/index.js';
 import { errorHandler } from './middlewares/index.js';
-import dotenv from 'dotenv';
 
-dotenv.config();
+// ========== __dirname para ES6 MODULES ==========
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// ========== CREAR LA APP PRIMERO ==========
 const app = express();
 
-// Middlewares
+// ========== MIDDLEWARES ==========
+app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+
+// ========== CONFIGURACIÓN DE VISTAS (PUG) ==========
+app.use(express.static(path.join(__dirname, '../public')));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// Swagger UI - Documentación interactiva
+// ========== SWAGGER UI - DOCUMENTACIÓN ==========
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Ruta para obtener la especificación Swagger en JSON
 app.get('/api-docs/swagger.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
 });
 
-// Rutas de API
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/users', gameSlotRoutes);
-app.use('/api/users', capturedPokemonRoutes);
-app.use('/api/ranking', rankingRoutes);
-app.use('/api/users', replayRoutes);
-
-// Ruta raíz con información básica
+// ========== RUTAS DE VISTAS (PANEL ADMIN) ==========
 app.get('/', (req, res) => {
-  res.json({
-    name: 'PokéSector 35 API',
-    version: '1.0.0',
-    description: 'Backend API para juego retro de captura de Pokémon',
-    documentation: 'http://localhost:3000/api-docs',
-    endpoints: {
-      auth: '/api/auth',
-      users: '/api/users',
-      slots: '/api/users/:userId/slots',
-      pokedex: '/api/users/:id/pokedex',
-      ranking: '/api/ranking',
-      replays: '/api/users/:userId/replays'
-    }
-  });
+  res.redirect('/login');
 });
 
-// Manejo de errores global
+app.get('/login', (req, res) => {
+  res.render('login', { title: 'PokéSector Admin - Login' });
+});
+
+app.get('/admin/dashboard', (req, res) => {
+  res.render('dashboard', { title: 'PokéSector Admin - Dashboard' });
+});
+
+app.get('/user/dashboard', (req, res) => {
+  res.render('dashboard', { title: 'PokéSector - Mi Dashboard' });
+});
+
+app.get('/admin/users', (req, res) => {
+  res.render('users', { title: 'PokéSector Admin - Usuarios' });
+});
+
+app.get('/user/users', (req, res) => {
+  res.render('users', { title: 'PokéSector - Usuarios' });
+});
+
+app.get('/admin/ranking', (req, res) => {
+  res.render('ranking', { title: 'PokéSector Admin - Ranking' });
+});
+
+app.get('/user/ranking', (req, res) => {
+  res.render('ranking', { title: 'PokéSector - Ranking' });
+});
+
+app.get('/admin/users/:id', (req, res) => {
+  res.render('users-detail', { title: 'PokéSector Admin - Detalles Usuario' });
+});
+
+app.get('/admin/pokedex', (req, res) => {
+  res.render('pokedex', { title: 'PokéSector Admin - Pokédex' });
+});
+
+app.get('/admin/slots', (req, res) => {
+  res.render('slots', { title: 'PokéSector Admin - Slots' });
+});
+
+// ========== RUTAS API ==========
+app.use('/api', routes);
+
+// ========== ERROR HANDLER ==========
 app.use(errorHandler);
 
-// Iniciar servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 PokéSector 35 Backend ejecutándose en http://localhost:${PORT}`);
-  console.log(`📚 Swagger UI disponible en http://localhost:${PORT}/api-docs`);
-});
+// ========== ARRANCAR SERVIDOR ==========
+const startServer = async () => {
+  try {
+    await sequelize.authenticate()
+    console.log('✅ Base de datos conectada en puerto 5432')
 
-export default app;
+    await sequelize.sync({ force: false })
+    console.log('✅ Modelos sincronizados')
+
+    const PORT = process.env.PORT || 3000
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor PokeSector corriendo en http://localhost:${PORT}`)
+      console.log(`📚 Swagger UI disponible en http://localhost:${PORT}/api-docs`)
+      console.log(`🎮 Panel Admin disponible en http://localhost:${PORT}/login`)
+    });
+
+  } catch (error) {
+    console.error('❌ Error al iniciar:', error)
+  }
+}
+
+startServer()
