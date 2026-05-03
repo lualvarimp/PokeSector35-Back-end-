@@ -52,7 +52,7 @@ html.dark-mode {
   --green-white: #132a0e;
 }
 
-/* =============== GENERAL STLES =============== */
+/* =============== GENERAL STYLES =============== */
 * {
   margin: 0;
   padding: 0;
@@ -68,10 +68,11 @@ html {
 
 body {
   width: 100%;
-  max-width: 50rem;
+  max-width: 62rem;
   font-family: var(--main-font);
   font-size: 1rem;
   color: var(--text-primary);
+  overflow-x: hidden;
   transition: all 0.3s ease;
 }
 
@@ -99,15 +100,14 @@ a {
 }
 
 /* =============== NAVBAR =============== */
-
 .navbar {
   color: var(--green-dark);
   padding: 1rem 1.5rem;
   position: sticky;
   top: 0;
   transition: all 0.3s ease;
+  background: var(--bg-primary);
   z-index: 100;
-  
 
   >div {
     display: flex;
@@ -142,7 +142,7 @@ a {
     padding: 0.5rem;
 
     span {
-      width: 1.75rem;
+      width: 1.8rem;
       height: 0.25rem;
       background-color: var(--text-primary);
       border-radius: 0.125rem;
@@ -151,7 +151,7 @@ a {
 
     &.active span {
       &:nth-of-type(1) {
-        transform: rotate(45deg) translate(0.7rem, 0.7rem);
+        transform: rotate(45deg) translate(0.45rem, 0.6rem);
       }
 
       &:nth-of-type(2) {
@@ -159,11 +159,11 @@ a {
       }
 
       &:nth-of-type(3) {
-        transform: rotate(-45deg) translate(0.5rem, -0.5rem);
+        transform: rotate(-45deg) translate(0.45rem, -0.6rem);
       }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 920px) {
       display: flex;
       order: 1;
     }
@@ -172,13 +172,13 @@ a {
   ul {
     display: flex;
     list-style: none;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: center;
     flex: 1;
     justify-content: flex-end;
     margin: 0;
 
-    @media (max-width: 768px) {
+    @media (max-width: 920px) {
       position: absolute;
       top: 100%;
       left: 0;
@@ -206,6 +206,10 @@ a {
       }
 
       a {
+        position: relative;
+        text-transform: uppercase;
+        text-shadow: 0 0 0.1rem var(--green-dark);
+        letter-spacing: 0.1rem;
         color: var(--text-primary);
         font-weight: 500;
         padding: 0.5rem 1rem;
@@ -214,9 +218,24 @@ a {
         display: inline-block;
 
         &:hover {
-          background-color: var(--green-light);
-          color: var(--black);
-          box-shadow: 0 0 8px var(--green-light);
+          animation: blink-logo 5s;
+        }
+
+        &::after {
+          position: absolute;
+          content: '';
+          left: 0.8rem;
+          bottom: 0;
+          width: 0%;
+          height: 0.15rem;
+          background: var(--green-dark);
+          box-shadow: 0 0 0.1rem var(--green-med);
+          transition: all 0.3s ease;
+        }
+
+        &:hover::after {
+          width: calc(100% - 1.6rem);
+          animation: blink-logo 5s;
         }
 
         @media (max-width: 768px) {
@@ -315,39 +334,249 @@ a {
   }
 }
 
-/* ============================================================================
-   MAIN CONTENT
-   ============================================================================ */
-
+/* =============== MAIN CONTENT =============== */
 main.main-content {
   min-height: calc(100vh - 6rem);
-  padding: 2rem 3rem;
+  padding: 2rem 1rem;
   max-width: 75rem;
   margin: 0 auto;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: all 0.3s ease;
+  box-sizing: border-box;
 
   @media (max-width: 480px) {
     padding: 1rem 1rem;
   }
 }
 
+/* =============== TABLE GENERAL =============== */
+.table-wrapper {
+  width: calc(100vw - 4rem);
+  max-width: 58.4rem;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  border-radius: 0;
+  -webkit-overflow-scrolling: touch;
+  background: var(--white);
+  border: 0.2rem solid var(--green-med);
+  border-radius: 0.2rem;
+  box-shadow: 0 0 0.3rem var(--green-med);
+  touch-action: pan-x;
+}
+
+/* =============== BUTTONS =============== */
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  background-color: var(--green-med);
+  color: var(--white);
+  letter-spacing: 0.1rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+
+  &:hover {
+    color: var(--white);
+    animation: blink-logo 5s infinite;
+  }
+
+}
+
+
+.btn-add {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--green-med);
+  text-transform: uppercase;
+  color: var(--white);
+  border: none;
+  border-radius: 0.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: var(--white);
+    animation: blink-logo 5s infinite;
+  }
+}
+
+
+#nextBtn {
+  font-size: 1rem;
+
+}
+
+#prevBtn {
+  font-size: 1rem;
+
+}
+
+
+
+/* =============== MODAL =============== */
+.modal-content {
+  background: var(--green-med);
+  border: 2px solid var(--green-med);
+  border-radius: 0.2rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+.btn-secondary {
+  padding: 0.75rem 1.5rem;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  text-transform: uppercase;
+
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: all 0.3s ease;
+
+  &:hover {
+    animation: blink-logo 5s infinite;
+    background-color: var(--black);
+    color: var(--white);
+  }
+}
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  text-transform: uppercase;
+
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: all 0.3s ease;
+
+  &:hover {
+    animation: blink-logo 5s infinite;
+    background-color: var(--black);
+    color: var(--white);
+  }
+}
+
+
+
+
+
+
+
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--green-med);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--white);
+  }
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--black);
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: var(--green-dark);
+  }
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 2px solid var(--white);
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
 /* =============== ANIMATIONS =============== */
 @keyframes blink {
-  0%   { opacity: 100%; }
-  1%   { opacity: 0%; }
-  2%   { opacity: 100%; }
-  100% { opacity: 100%; }
+  0% {
+    opacity: 100%;
+  }
+
+  1% {
+    opacity: 0%;
+  }
+
+  2% {
+    opacity: 100%;
+  }
+
+  100% {
+    opacity: 100%;
+  }
 }
 
 @keyframes blink-logo {
-  0%   { opacity: 100%; }
-  0.5% { opacity: 0%; }
-  1%   { opacity: 100%; }
-  1.5% { opacity: 0%; }
-  2%   { opacity: 100%; }
-  2.5% { opacity: 0%; }
-  5%   { opacity: 100%; }
-  100% { opacity: 100%; }
+  0% {
+    opacity: 100%;
+  }
+
+  0.5% {
+    opacity: 0%;
+  }
+
+  1% {
+    opacity: 100%;
+  }
+
+  1.5% {
+    opacity: 0%;
+  }
+
+  2% {
+    opacity: 100%;
+  }
+
+  2.5% {
+    opacity: 0%;
+  }
+
+  5% {
+    opacity: 100%;
+  }
+
+  100% {
+    opacity: 100%;
+  }
 }

@@ -9,7 +9,7 @@ block content
         h1.pokedex-title Pokédex del Usuario
       p.pokedex-subtitle Gestiona los Pokémon capturados
 
-    //- Filtros y acciones
+    //- Filtros y acciones (solo búsqueda)
     .pokedex-controls
       .controls-left
         .search-group
@@ -18,24 +18,34 @@ block content
             placeholder='Buscar Pokémon...'
           )
 
-        .sort-group
-          label(for='sortBy') Ordenar por:
-          select#sortBy.filter-select
-            option(value='name') Nombre (A-Z)
-            option(value='id') ID (menor a mayor)
-
       .controls-right
         button#addPokemonBtn.btn-add + Añadir Pokémon
 
-    //- Tabla de Pokémon
+    //- Tabla de Pokémon CON ORDENAMIENTO EN HEADERS
     .table-wrapper
       table.pokedex-table
         thead
           tr
-            th ID
-            th Nombre
-            th Slot
-            th Capturado
+            th
+              span(data-sort-state='none') ID
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Nombre
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Slot
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Capturado
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
             th Acciones
 
         tbody#pokemonTableBody
@@ -46,7 +56,7 @@ block content
     .pokedex-footer
       span#pokemonCountTotal Total: 0 Pokémon capturados
 
-    //- Modal añadir Pokémon
+    //- Modal añadir Pokémon CON AUTOCOMPLETE
     #addPokemonModal.modal(style='display: none;')
       .modal-content
         .modal-header
@@ -59,10 +69,11 @@ block content
               label(for='pokemonId') ID Pokémon (Pokedex)
               input#pokemonId(
                 type='number'
-                placeholder='Ej: 25 (Pikachu)'
+                placeholder='Ej: 25'
                 required
                 min='1'
               )
+              small(style='color: #666;') Escribe el ID y se rellena automáticamente el nombre
             
             .form-group
               label(for='pokemonName') Nombre Pokémon
@@ -70,7 +81,10 @@ block content
                 type='text'
                 placeholder='Ej: Pikachu'
                 required
+                autocomplete='off'
               )
+              small(style='color: #666;') Escribe 2+ letras para ver sugerencias
+              #pokemonSuggestions
 
             .form-group
               label(for='slotId') Slot de Partida (opcional)
@@ -90,4 +104,5 @@ block content
           button.btn-primary(type='button' onclick='addPokemon()') Añadir
 
 block scripts
+  script(src='/js/multiColumnSort.js')
   script(src='/js/pokedex.js')

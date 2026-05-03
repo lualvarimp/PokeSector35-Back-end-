@@ -18,24 +18,46 @@ block content
           option(value='dificil') Difícil
           option(value='infernal') Infernal
 
-      .filter-group
-        label(for='sortBy') Ordenar por:
-        select#sortBy.filter-select
-          option(value='captures') Más Capturas
-          option(value='percentage') % Captura
-
     //- Tabla de ranking
     .table-wrapper
       table.ranking-table
         thead
           tr
-            th Posición
-            th Usuario
-            th Capturas
-            th Escapadas
-            th % Captura
-            th Dificultad
-            th Completado
+            th
+              span(data-sort-state='none') Pos.
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Usuario
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Capt.
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Esc.
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') % Capt.
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Nivel
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Fecha
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
             th Acciones
 
         tbody#rankingTableBody
@@ -44,7 +66,11 @@ block content
 
     //- Paginación
     .ranking-pagination
-      span#rankingCount Total partidas: 0
+      #pageInfo Página 1 de 1
+      .pagination-controls
+        button#prevBtn.pagination-btn(onclick='previousPage()' disabled) ‹ Anterior
+        button#nextBtn.pagination-btn(onclick='nextPage()') Siguiente ›
 
 block scripts
+  script(src='/js/multiColumnSort.js')
   script(src='/js/ranking.js')

@@ -17,25 +17,6 @@
   margin-bottom: 1rem;
 }
 
-.btn-back {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: var(--green-med);
-  color: var(--white);
-  border-radius: 0.5rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  cursor: pointer;
-  border: none;
-
-  &:hover {
-    background-color: var(--green-dark);
-    transform: translateX(-2px);
-  }
-}
-
 .slots-title {
   font-size: 2rem;
   font-weight: 700;
@@ -77,8 +58,8 @@
   width: 100%;
   padding: 0.75rem 1rem;
   border: 2px solid var(--white);
-  border-radius: 0.5rem;
-  background-color: var(--bg-primary);
+  border-radius: 0.2rem;
+  background: var(--white);
   color: var(--text-primary);
   transition: all 0.3s ease;
 
@@ -94,28 +75,7 @@
   }
 }
 
-.btn-add {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--green-med);
-  color: var(--white);
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: var(--font-family);
-  transition: all 0.3s ease;
 
-  &:hover {
-    background-color: var(--green-dark);
-    box-shadow: 0 4px 12px rgba(129, 170, 99, 0.4);
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
 
 .slots-grid {
   display: grid;
@@ -317,14 +277,7 @@
   }
 }
 
-.btn-edit {
-  background-color: rgba(76, 175, 80, 0.4);
-  color: var(--white);
 
-  &:hover {
-    background-color: rgba(76, 175, 80, 0.6);
-  }
-}
 
 .btn-delete {
   background-color: rgba(244, 67, 54, 0.4);
@@ -352,65 +305,6 @@
   }
 }
 
-.modal-content {
-  background-color: var(--white);
-  border: 2px solid var(--green-med);
-  border-radius: 1rem;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease;
-
-  @keyframes slideUp {
-    from {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-}
-
-.modal-header {
-  padding: 1.5rem;
-  border-bottom: 2px solid var(--green-med);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--green-dark);
-  }
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--black);
-  transition: all 0.3s ease;
-
-  &:hover {
-    color: var(--green-dark);
-  }
-}
-
-.modal-body {
-  padding: 1.5rem;
-}
-
-.modal-footer {
-  padding: 1.5rem;
-  border-top: 2px solid var(--white);
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-}
 
 .form-group {
   margin-bottom: 1.5rem;

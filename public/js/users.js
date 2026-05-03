@@ -1,56 +1,61 @@
 // ============================================================================
 // POKÉSECTOR ADMIN PANEL - USERS.JS
-// Gestión de tabla de usuarios con filtros y acciones
+// Gestión de usuarios
+// Utiliza multiColumnSort.js para ordenamiento multi-columna
 // ============================================================================
+
+const ITEMS_PER_PAGE = 20;
+let currentPage = 1;
+let allUsers = [];
+let sorter = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   const accessToken = localStorage.getItem('access_token');
-  const userId = localStorage.getItem('user_id');
-  const userRole = localStorage.getItem('user_role');
 
-  if (!accessToken || !userId) {
+  if (!accessToken) {
     window.location.href = '/login';
     return;
   }
 
-  loadUsers(userRole, userId);
+  loadUsers();
   setupFilters();
-  setupSorting();
 });
-
-let allUsers = [];
-let filteredUsers = [];
-let currentSort = { field: null, direction: 'asc' };
 
 // ============================================================================
 // CARGAR USUARIOS
 // ============================================================================
 
-async function loadUsers(userRole, userId) {
+async function loadUsers() {
   try {
     const accessToken = localStorage.getItem('access_token');
+    const roleFilter = document.getElementById('roleFilter').value;
 
-    let users = [];
+    const response = await fetch('/api/users', {
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
 
-    if (userRole === 'admin') {
-      // Admin ve todos los usuarios
-      const response = await fetch('/api/users', {
-        headers: { 'Authorization': `Bearer ${accessToken}` }
-      });
-      users = await response.json();
-    } else {
-      // User solo ve sus propios datos
-      const response = await fetch(`/api/users/${userId}`, {
-        headers: { 'Authorization': `Bearer ${accessToken}` }
-      });
-      const user = await response.json();
-      users = [user];
+    if (!response.ok) {
+      throw new Error('Error cargando usuarios');
+    }
+
+    let users = await response.json();
+
+    // Filtrar por rol si es necesario
+    if (roleFilter !== 'all') {
+      users = users.filter(u => u.role === roleFilter);
     }
 
     allUsers = users;
-    filteredUsers = [...allUsers];
-    renderTable(filteredUsers, userRole);
-    updateUserCount(filteredUsers.length);
+
+    // Inicializar sorter
+    if (!sorter) {
+      sorter = new UsersSort('.users-table', allUsers, renderUsers);
+    } else {
+      sorter.setData(allUsers);
+    }
+
+    currentPage = 1;
+    renderUsers(allUsers);
 
   } catch (error) {
     console.error('Error cargando usuarios:', error);
@@ -58,37 +63,96 @@ async function loadUsers(userRole, userId) {
 }
 
 // ============================================================================
-// RENDERIZAR TABLA
+// RENDERIZAR USUARIOS CON PAGINACIÓN
 // ============================================================================
 
-function renderTable(users, userRole) {
+function renderUsers(users) {
   const tbody = document.getElementById('usersTableBody');
   
   if (users.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="loading">No hay usuarios para mostrar</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="loading">No hay usuarios</td></tr>';
+    updatePaginationUI(0);
     return;
   }
 
-  tbody.innerHTML = users.map(user => {
-    const createdAt = new Date(user.createdAt).toLocaleDateString('es-ES');
-    
+  // Calcular paginación
+  const totalPages = Math.ceil(users.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedUsers = users.slice(startIndex, endIndex);
+
+  tbody.innerHTML = paginatedUsers.map(user => {
+    const date = new Date(user.created_at);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
+
     return `
-      <tr>
-        <td>${user.username}</td>
-        <td>-</td>
-        <td><span class="role-badge ${user.role}">${user.role}</span></td>
-        <td>${createdAt}</td>
-        <td>
-          <div class="actions-cell">
-            <button class="btn-small btn-view" onclick="viewUser('${user.id}')">Ver</button>
-            ${userRole === 'admin' ? `
-              <button class="btn-small btn-delete" onclick="deleteUser('${user.id}', '${user.username}')">Eliminar</button>
-            ` : ''}
-          </div>
-        </td>
-      </tr>
-    `;
+    <tr>
+      <td>#${user.id}</td>
+      <td>${user.username}</td>
+      <td>
+        <span class="role-badge ${user.role}">
+          ${user.role}
+        </span>
+      </td>
+      <td>${formattedDate}</td>
+      <td>
+        <div class="actions-cell">
+          <a href="/admin/users/${user.id}" class="btn-small btn-view">Ver</a>
+          ${user.deleted_at ? 
+            `<button class="btn-small btn-restore" onclick="restoreUser(${user.id})">Restaurar</button>` :
+            `<button class="btn-small btn-delete" onclick="deleteUser(${user.id})">Eliminar</button>`
+          }
+        </div>
+      </td>
+    </tr>
+  `;
   }).join('');
+
+  updatePaginationUI(totalPages);
+}
+
+// ============================================================================
+// ACTUALIZAR UI DE PAGINACIÓN
+// ============================================================================
+
+function updatePaginationUI(totalPages) {
+  const pageInfo = document.getElementById('pageInfo');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  if (pageInfo) {
+    pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+  }
+
+  if (prevBtn) {
+    prevBtn.disabled = currentPage === 1;
+  }
+
+  if (nextBtn) {
+    nextBtn.disabled = currentPage >= totalPages || totalPages === 0;
+  }
+}
+
+// ============================================================================
+// PAGINACIÓN
+// ============================================================================
+
+function previousPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    renderUsers(sorter.getFilteredData());
+  }
+}
+
+function nextPage() {
+  const totalPages = Math.ceil(sorter.getFilteredData().length / ITEMS_PER_PAGE);
+  if (currentPage < totalPages) {
+    currentPage++;
+    renderUsers(sorter.getFilteredData());
+  }
 }
 
 // ============================================================================
@@ -97,135 +161,21 @@ function renderTable(users, userRole) {
 
 function setupFilters() {
   const roleFilter = document.getElementById('roleFilter');
-  
+
   if (roleFilter) {
-    roleFilter.addEventListener('change', applyFilters);
-  }
-}
-
-// ============================================================================
-// APLICAR FILTROS
-// ============================================================================
-
-function applyFilters() {
-  const roleFilter = document.getElementById('roleFilter').value;
-  const userRole = localStorage.getItem('user_role');
-
-  filteredUsers = allUsers.filter(user => {
-    if (roleFilter !== 'todos' && user.role !== roleFilter) {
-      return false;
-    }
-    return true;
-  });
-
-  // Aplicar ordenamiento actual
-  if (currentSort.field) {
-    sortUsers(currentSort.field, currentSort.direction);
-  } else {
-    renderTable(filteredUsers, userRole);
-  }
-
-  updateUserCount(filteredUsers.length);
-}
-
-// ============================================================================
-// SETUP SORTING
-// ============================================================================
-
-function setupSorting() {
-  const usernameHeader = document.getElementById('usernameHeader');
-  const explorerHeader = document.getElementById('explorerHeader');
-  const roleHeader = document.getElementById('roleHeader');
-
-  if (usernameHeader) {
-    usernameHeader.addEventListener('click', () => {
-      toggleSort('username', usernameHeader);
-    });
-  }
-
-  if (explorerHeader) {
-    explorerHeader.addEventListener('click', () => {
-      toggleSort('explorer', explorerHeader);
-    });
-  }
-
-  if (roleHeader) {
-    roleHeader.addEventListener('click', () => {
-      toggleSort('role', roleHeader);
+    roleFilter.addEventListener('change', () => {
+      currentPage = 1;
+      loadUsers();
     });
   }
 }
 
 // ============================================================================
-// TOGGLE SORTING
+// ELIMINAR USUARIO (SOFT DELETE)
 // ============================================================================
 
-function toggleSort(field, headerElement) {
-  const userRole = localStorage.getItem('user_role');
-
-  // Si es el mismo campo, cambiar dirección. Si es otro, empezar con asc
-  if (currentSort.field === field) {
-    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-  } else {
-    // Limpiar clases de otros headers
-    document.querySelectorAll('th.sortable').forEach(th => {
-      th.classList.remove('sort-asc', 'sort-desc');
-    });
-    currentSort.field = field;
-    currentSort.direction = 'asc';
-  }
-
-  // Añadir clase al header actual
-  headerElement.classList.remove('sort-asc', 'sort-desc');
-  headerElement.classList.add(`sort-${currentSort.direction}`);
-
-  sortUsers(field, currentSort.direction);
-  renderTable(filteredUsers, userRole);
-}
-
-// ============================================================================
-// ORDENAR USUARIOS
-// ============================================================================
-
-function sortUsers(field, direction) {
-  filteredUsers.sort((a, b) => {
-    let aValue, bValue;
-
-    if (field === 'username') {
-      aValue = a.username;
-      bValue = b.username;
-    } else if (field === 'explorer') {
-      aValue = a.explorer_name || '';
-      bValue = b.explorer_name || '';
-    } else if (field === 'role') {
-      aValue = a.role;
-      bValue = b.role;
-    }
-
-    // Comparación alfabética (case-insensitive)
-    aValue = aValue.toLowerCase();
-    bValue = bValue.toLowerCase();
-
-    if (aValue < bValue) return direction === 'asc' ? -1 : 1;
-    if (aValue > bValue) return direction === 'asc' ? 1 : -1;
-    return 0;
-  });
-}
-
-// ============================================================================
-// VER USUARIO
-// ============================================================================
-
-function viewUser(userId) {
-  window.location.href = `/admin/users/${userId}`;
-}
-
-// ============================================================================
-// ELIMINAR USUARIO
-// ============================================================================
-
-async function deleteUser(userId, username) {
-  if (!confirm(`¿Estás seguro de que quieres eliminar a ${username}?`)) {
+async function deleteUser(userId) {
+  if (!confirm('¿Eliminar usuario? (se puede restaurar después)')) {
     return;
   }
 
@@ -238,10 +188,10 @@ async function deleteUser(userId, username) {
     });
 
     if (response.ok) {
-      alert('Usuario eliminado correctamente');
-      location.reload();
+      alert('Usuario eliminado');
+      loadUsers();
     } else {
-      alert('Error al eliminar el usuario');
+      alert('Error al eliminar usuario');
     }
 
   } catch (error) {
@@ -250,12 +200,30 @@ async function deleteUser(userId, username) {
 }
 
 // ============================================================================
-// ACTUALIZAR CONTADOR
+// RESTAURAR USUARIO
 // ============================================================================
 
-function updateUserCount(count) {
-  const countElement = document.getElementById('userCount');
-  if (countElement) {
-    countElement.textContent = `Total usuarios: ${count}`;
+async function restoreUser(userId) {
+  if (!confirm('¿Restaurar usuario?')) {
+    return;
+  }
+
+  try {
+    const accessToken = localStorage.getItem('access_token');
+
+    const response = await fetch(`/api/users/${userId}/restore`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+
+    if (response.ok) {
+      alert('Usuario restaurado');
+      loadUsers();
+    } else {
+      alert('Error al restaurar usuario');
+    }
+
+  } catch (error) {
+    console.error('Error restaurando usuario:', error);
   }
 }

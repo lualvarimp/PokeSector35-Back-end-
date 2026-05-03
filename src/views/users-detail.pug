@@ -22,12 +22,6 @@ block content
                 button.btn-edit(data-field='username') Editar
 
             tr
-              td.label Explorador
-              td#explorer -
-              td.actions
-                button.btn-edit(data-field='explorer') Editar
-
-            tr
               td.label Rol
               td#role -
               td.actions
@@ -50,26 +44,27 @@ block content
               td -
 
     //- Card Pokémon capturados
-    .detail-section
-      h2.section-title Pokémon Capturados
-      .pokemon-card
-        .pokemon-content
-          .pokemon-count
-            span.count-number#pokemonCount 0
-            span.count-label Pokémon únicos capturados
-          .pokemon-actions
-            a.btn-action.btn-primary(id='viewPokedexBtn') Ver Detalles →
+    .detail-section.pokemon-slots-section
+      .detail-section
+        h2.section-title Pokémon Capturados
+        .pokemon-card
+          .pokemon-content
+            .pokemon-count
+              span.count-number#pokemonCount 0
+              span.count-label Pokémon únicos capturados
+            .pokemon-actions
+              a.btn-action.btn-primary(id='viewPokedexBtn') Ver Detalles →
 
-    //- Card Slots
-    .detail-section
-      h2.section-title Slots de Partida
-      .pokemon-card
-        .pokemon-content
-          .pokemon-count
-            span.count-number#slotCount 0
-            span.count-label Slots disponibles
-          .pokemon-actions
-            a.btn-action.btn-primary(id='viewSlotsBtn') Ver Slots →
+      //- Card Slots
+      .detail-section
+        h2.section-title Slots de Partida
+        .pokemon-card
+          .pokemon-content
+            .pokemon-count
+              span.count-number#slotCount 0
+              span.count-label Slots disponibles
+            .pokemon-actions
+              a.btn-action.btn-primary(id='viewSlotsBtn') Ver Slots →
 
     //- Botones de acción
     .detail-actions
@@ -119,7 +114,7 @@ block content
       .modal-content
         .modal-header
           h2 ✓ Usuario Creado
-        
+
         .modal-body
           p#successMessage Usuario creado correctamente
         

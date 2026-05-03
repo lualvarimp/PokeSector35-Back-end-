@@ -98,7 +98,7 @@ const startServer = async () => {
     console.log('✅ Modelos sincronizados')
 
     const PORT = process.env.PORT || 3000
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Servidor PokeSector corriendo en http://localhost:${PORT}`)
       console.log(`📚 Swagger UI disponible en http://localhost:${PORT}/api-docs`)
       console.log(`🎮 Panel Admin disponible en http://localhost:${PORT}/login`)

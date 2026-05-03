@@ -10,12 +10,18 @@ html(lang='es')
     link(href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap' rel='stylesheet')
     link(rel='stylesheet' href='/css/layout.css')
     link(rel='stylesheet' href='/css/dashboard.css')
+    link(rel='stylesheet' href='/css/login.css')
+    link(rel='stylesheet' href='/css/users-detail.css')
+    link(rel='stylesheet' href='/css/ranking.css')
+    link(rel='stylesheet' href='/css/pokedex.css')
+    link(rel='stylesheet' href='/css/slots.css')
+    link(rel='stylesheet' href='/css/users.css')
   
   body
     nav.navbar
       div
         .logo-placeholder
-          a(href='/')
+          a(href='/') POKÉSECTOR ADMIN
         
         button#menuToggle
           span
@@ -31,17 +37,7 @@ html(lang='es')
           li#adminMenu(style='display: none;')
             a(href='/admin/ranking') Ranking
           li#adminMenu(style='display: none;')
-            a(href='/admin/logout') Logout
-          
-          //- Menú User
-          li#userMenu(style='display: none;')
-            a(href='/user/dashboard') Dashboard
-          li#userMenu(style='display: none;')
-            a(href='/user/profile') Mi Perfil
-          li#userMenu(style='display: none;')
-            a(href='/user/ranking') Ranking
-          li#userMenu(style='display: none;')
-            a(href='/user/logout') Logout
+            a(href='#' onclick='performLogout(event)') Logout
         
         .theme-toggle
           input#themeSwitch(type='checkbox')
@@ -50,6 +46,10 @@ html(lang='es')
     //- Main content
     main.main-content
       block content
+
+    //- Footer reutilizable
+    footer.login-footer
+      p &copy; 2026 PokéSector 35 | Desarrollado por Luis Alonso
 
     //- Scripts
     script(src='/js/layout.js')

@@ -54,8 +54,8 @@ router.post('/register', validateRegister, register);
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: Iniciar sesión
- *     description: Autentica un usuario y devuelve tokens JWT (access token y refresh token)
+ *     summary: Iniciar sesión (SOLO para administradores)
+ *     description: Autentica un usuario y devuelve tokens JWT. ⚠️ **RESTRICCIÓN: Solo usuarios con rol 'admin' pueden loguear**. Los usuarios con rol 'user' recibirán error 403.
  *     tags:
  *       - Autenticación
  *     requestBody:
@@ -89,6 +89,14 @@ router.post('/register', validateRegister, register);
  *               $ref: '#/components/schemas/Error'
  *             example:
  *               error: "Usuario o contraseña incorrectos"
+ *       403:
+ *         description: Usuario no es administrador
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               error: "Solo administradores pueden acceder a este panel"
  *     security: []
  */
 router.post('/login', validateLogin, login);

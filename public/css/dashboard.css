@@ -1,6 +1,4 @@
-/* ============================================================================
-   POKÉSECTOR ADMIN PANEL - DASHBOARD CSS
-   ============================================================================ */
+/* Styles by Luis Alonso */
 
 .dashboard-header {
   margin-bottom: 3rem;
@@ -14,38 +12,52 @@
   margin-bottom: 0.5rem;
 }
 
-.dashboard-subtitle {
-  font-size: 1rem;
-  color: var(--green-dark);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+.stats-flex {
+  display: flex;
   gap: 2rem;
   margin-bottom: 3rem;
+
+@media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+    }
+
 }
 
 .stat-card {
-  background-color: var(--white);
-  border: 2px solid var(--green-med);
-  border-radius: 1rem;
+  width: 33%;
+  background: var(--white);
+  border: 0.2rem solid var(--green-med);
+  border-radius: 0.2rem;
   padding: 2rem;
   display: flex;
+  flex-direction: column;
   gap: 1.5rem;
-  align-items: flex-start;
+  align-items: center;
   transition: all 0.3s ease;
+  box-shadow: 0 0 0.3rem var(--green-med);
 
-  &:hover {
-    box-shadow: 0 6px 20px rgba(129, 170, 99, 0.3);
-    transform: translateY(-2px);
+  .stat-icon {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    
+
+    img {
+      width: 80%;
+      mix-blend-mode: multiply;
+      
+
+    }
   }
+@media (max-width: 768px) {
+      width: 100%;
+      max-width: 18rem;
+    }
+  
+
 }
 
-.stat-icon {
-  font-size: 2.5rem;
-  flex-shrink: 0;
-}
 
 .stat-content {
   flex: 1;
@@ -59,16 +71,16 @@
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: var(--green-dark);
+  color: var(--black);
   margin-bottom: 0.5rem;
 }
 
 .stat-change {
-  font-size: 0.875rem;
+  font-size: 1.1rem;
   color: var(--green-med);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .dashboard-section {
@@ -109,25 +121,34 @@
 }
 
 .top-players {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
-  gap: 2rem;
+  display: flex;
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+    }
+
+
 }
 
 .player-card {
   background-color: var(--white);
-  border: 2px solid var(--green-med);
-  border-radius: 1rem;
+  border: 0.2rem solid var(--green-med);
+   box-shadow: 0 0 0.3rem var(--green-med);
+  border-radius: 0.2rem;
   padding: 1.5rem;
   display: flex;
   gap: 1.5rem;
   align-items: center;
   transition: all 0.3s ease;
+  width: 33%;
 
-  &:hover {
-    box-shadow: 0 6px 20px rgba(129, 170, 99, 0.3);
-    transform: translateY(-2px);
-  }
+  @media (max-width: 768px) {
+      width: 100%;
+      max-width: 18rem;
+    }
+  
 }
 
 .player-rank {
@@ -140,45 +161,71 @@
 }
 
 .player-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--green-dark);
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.1rem;
+  color: var(--black);
   margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .player-stats {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--black);
+
+  span {
+    display: block;
+    margin-bottom: 0.3rem;
+
+    &:last-of-type {
+      color: var(--green-med);
+    }
+  }
 
   span:not(:last-child) {
     margin-right: 0.5rem;
   }
 }
 
-.difficulty-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
-  gap: 2rem;
+.difficulty-flex {
+  display: flex;
+  gap: 1.5rem;
+
+   @media (max-width: 768px) {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 }
 
 .difficulty-card {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
   background-color: var(--white);
-  border: 2px solid var(--green-med);
-  border-radius: 1rem;
-  padding: 1.5rem;
+  border: 0.2rem solid var(--green-med);
+   box-shadow: 0 0 0.3rem var(--green-med);
+  border-radius: 0.2rem;
+  padding: 1rem 2rem;
+
+  @media (max-width: 768px) {
+      width: 45%;
+      max-width: 15rem;
+    }
 }
 
 .difficulty-label {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--black);
   margin-bottom: 0.5rem;
 }
 
 .difficulty-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--green-dark);
+  color: var(--green-med);
   margin-bottom: 1rem;
 }
 
@@ -186,14 +233,12 @@
   width: 100%;
   height: 0.5rem;
   background-color: var(--white);
-  border-radius: 0.25rem;
   overflow: hidden;
 }
 
 .difficulty-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--green-med), var(--green-dark));
-  border-radius: 0.25rem;
+  background: var(--green-med);
   transition: width 0.5s ease;
 }
 

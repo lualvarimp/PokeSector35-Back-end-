@@ -45,33 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
         localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('user_role', data.role);
 
-        showMessage('¡Login correcto! Redirigiendo...', 'success');
+        showMessage('¡LOGIN CORRECTO! REDIRIGIENDO...', 'success');
 
-        // Obtener información del usuario para determinar su rol
-        const userResponse = await fetch(`/api/users/${data.user_id}`, {
-          headers: {
-            'Authorization': `Bearer ${data.access_token}`
-          }
-        });
-
-        const userData = await userResponse.json();
-
-        // Guardar rol en localStorage para el menú
-        localStorage.setItem('user_role', userData.role);
-
-        // Redirigir según rol
+        // Redirigir al dashboard admin
         setTimeout(() => {
-          if (userData.role === 'admin') {
-            window.location.href = '/admin/dashboard';
-          } else {
-            window.location.href = '/user/dashboard';
-          }
+          window.location.href = '/admin/dashboard';
         }, 1000);
 
       } else {
         // Error en login
-        showMessage(data.error || 'Usuario o contraseña incorrectos', 'error');
+        showMessage(data.error || 'USUARIO O CONTRASEÑA INCORRECTOS', 'error');
         submitButton.disabled = false;
         submitButton.textContent = 'Entrar';
       }

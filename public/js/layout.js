@@ -1,72 +1,73 @@
+// ============================================================================
+// LAYOUT.JS - Funciones compartidas del layout
+// ============================================================================
+
+// ============================================================================
+// LOGOUT
+// ============================================================================
+
+async function performLogout(event) {
+  event.preventDefault();
+
+  try {
+    const accessToken = localStorage.getItem('access_token');
+
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // Limpiar localStorage
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('username');
+
+    // Redirigir a login y reemplazar el historial
+    // Usar location.replace() para que NO se pueda volver atrás
+    window.location.replace('/login');
+
+  } catch (error) {
+    console.error('Error en logout:', error);
+    // Aunque falle, redirigir a login y limpiar tokens
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('username');
+    window.location.replace('/login');
+  }
+}
+
+// ============================================================================
+// VERIFICAR TOKEN AL CARGAR PÁGINA (ANTI-BACK BUTTON)
+// ============================================================================
+
+function checkAuthOnLoad() {
+  const accessToken = localStorage.getItem('access_token');
+  const userRole = localStorage.getItem('user_role');
+  
+  // Si no hay token y no estamos en login, redirigir a login
+  if (!accessToken && !window.location.pathname.includes('/login')) {
+    window.location.replace('/login');
+  }
+  
+  // Si hay token pero es inválido, redirigir a login
+  // (esto lo valida el servidor al hacer cualquier petición)
+}
+
+// ============================================================================
+// MENU TOGGLE (RESPONSIVE)
+// ============================================================================
+
 document.addEventListener('DOMContentLoaded', () => {
-  const themeToggle = document.getElementById('themeSwitch');
-  const html = document.documentElement;
+  // Verificar autenticación al cargar
+  checkAuthOnLoad();
+
   const menuToggle = document.getElementById('menuToggle');
   const navMenu = document.getElementById('navMenu');
-  const adminMenuItems = document.querySelectorAll('#adminMenu');
-  const userMenuItems = document.querySelectorAll('#userMenu');
-
-  // =========================================================================
-  // TOGGLE TEMA CLARO/OSCURO
-  // =========================================================================
-
-  const savedTheme = localStorage.getItem('pokesector-theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  // Aplicar tema guardado o preferencia del sistema
-  if (savedTheme) {
-    if (savedTheme === 'dark') {
-      html.classList.add('dark-mode');
-      if (themeToggle) themeToggle.checked = true;
-    }
-  } else if (prefersDark) {
-    html.classList.add('dark-mode');
-    if (themeToggle) themeToggle.checked = true;
-    localStorage.setItem('pokesector-theme', 'dark');
-  }
-
-  // Toggle manual del tema
-  if (themeToggle) {
-    themeToggle.addEventListener('change', () => {
-      html.classList.toggle('dark-mode');
-      const isDarkMode = html.classList.contains('dark-mode');
-      localStorage.setItem('pokesector-theme', isDarkMode ? 'dark' : 'light');
-    });
-  }
-
-  // Escuchar cambios en preferencia del sistema
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (!localStorage.getItem('pokesector-theme')) {
-      html.classList.toggle('dark-mode', e.matches);
-      if (themeToggle) themeToggle.checked = e.matches;
-    }
-  });
-
-  // =========================================================================
-  // MOSTRAR MENÚ SEGÚN ROL DEL USUARIO
-  // =========================================================================
-
-  function showMenuByRole() {
-    const userRole = localStorage.getItem('user_role');
-    
-    // Ocultar todos los items
-    adminMenuItems.forEach(item => item.style.display = 'none');
-    userMenuItems.forEach(item => item.style.display = 'none');
-    
-    // Mostrar según rol
-    if (userRole === 'admin') {
-      adminMenuItems.forEach(item => item.style.display = '');
-    } else if (userRole === 'user') {
-      userMenuItems.forEach(item => item.style.display = '');
-    }
-  }
-
-  // Mostrar menú al cargar la página
-  showMenuByRole();
-
-  // =========================================================================
-  // TOGGLE MENÚ HAMBURGUESA
-  // =========================================================================
 
   if (menuToggle && navMenu) {
     menuToggle.addEventListener('click', () => {
@@ -75,20 +76,68 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Cerrar menú al hacer click en un link
-    const navLinks = navMenu.querySelectorAll('a');
-    navLinks.forEach(link => {
+    const links = navMenu.querySelectorAll('a');
+    links.forEach(link => {
       link.addEventListener('click', () => {
         menuToggle.classList.remove('active');
         navMenu.classList.remove('active');
       });
     });
+  }
 
-    // Cerrar menú al hacer click fuera
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.navbar')) {
-        menuToggle.classList.remove('active');
-        navMenu.classList.remove('active');
+  // THEME TOGGLE
+  const themeSwitch = document.getElementById('themeSwitch');
+  if (themeSwitch) {
+    // Verificar tema guardado
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark-mode');
+      themeSwitch.checked = true;
+    }
+
+    themeSwitch.addEventListener('change', () => {
+      const isDark = themeSwitch.checked;
+      if (isDark) {
+        document.documentElement.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
       }
     });
+  }
+
+  // Mostrar menú admin si es usuario admin
+  const userRole = localStorage.getItem('user_role');
+  if (userRole === 'admin') {
+    const adminMenuItems = document.querySelectorAll('#adminMenu');
+    adminMenuItems.forEach(item => {
+      item.style.display = 'block';
+    });
+  }
+});
+
+// ============================================================================
+// PREVENIR CACHÉ AL VOLVER ATRÁS
+// ============================================================================
+
+// Prevenir que el navegador cachee páginas autenticadas
+window.addEventListener('pageshow', (event) => {
+  // Si la página viene del caché (back button)
+  if (event.persisted) {
+    const accessToken = localStorage.getItem('access_token');
+    
+    // Si no hay token, redirigir a login
+    if (!accessToken && !window.location.pathname.includes('/login')) {
+      window.location.replace('/login');
+    }
+  }
+});
+
+// Desabilitar caché para páginas admin
+window.addEventListener('pagehide', () => {
+  // Evitar que el navegador guarde en caché las páginas autenticadas
+  if (window.history.pushState) {
+    window.history.pushState(null, '', window.location.href);
   }
 });

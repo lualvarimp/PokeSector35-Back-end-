@@ -14,7 +14,7 @@ import bcrypt from 'bcrypt';
 export async function getAllUsers(req, res) {
   try {
     const users = await User.findAll({
-      attributes: { exclude: ['password_hash', 'deleted_at'] }
+      attributes: { exclude: ['password_hash'] }
     });
     res.json(users);
   } catch (error) {
@@ -72,6 +72,7 @@ export async function updateUser(req, res) {
  * Elimina un usuario (soft delete: marca deleted_at con la fecha actual)
  * El usuario sigue en la BD pero aparecerá como "eliminado"
  * Solo admins pueden hacer esto
+ * IMPORTANTE: Un admin NO puede eliminar a otro admin
  * @param {Object} req - Express request
  * @param {string} req.params.id - ID del usuario a eliminar
  * @param {Object} req.user - Usuario autenticado (debe ser admin)
@@ -84,6 +85,12 @@ export async function deleteUser(req, res) {
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
+
+    // Validación: un admin no puede eliminar a otro admin
+    if (user.role === 'admin') {
+      return res.status(403).json({ error: 'No se puede eliminar a un administrador' });
+    }
+
     // Soft delete: marcar deleted_at
     await user.update({ deleted_at: new Date() });
     res.json({ message: 'Usuario eliminado', user });
@@ -144,6 +151,7 @@ export async function restoreUser(req, res) {
  * Elimina un usuario permanentemente (hard delete)
  * ADVERTENCIA: Esta acción no se puede deshacer
  * Solo admins pueden hacer esto
+ * IMPORTANTE: Un admin NO puede eliminar permanentemente a otro admin
  * @param {Object} req - Express request
  * @param {string} req.params.id - ID del usuario a eliminar permanentemente
  * @param {Object} req.user - Usuario autenticado (debe ser admin)
@@ -157,6 +165,11 @@ export async function permanentDeleteUser(req, res) {
     
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    // Validación: un admin no puede eliminar permanentemente a otro admin
+    if (user.role === 'admin') {
+      return res.status(403).json({ error: 'No se puede eliminar a un administrador' });
     }
     
     await user.destroy({ force: true });

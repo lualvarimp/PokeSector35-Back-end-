@@ -43,12 +43,15 @@ async function loadUserData(userId) {
 
     userData = await response.json();
 
-    // Rellenar tabla
+    // Rellenar tabla (SIN campo explorer)
     document.getElementById('username').textContent = userData.username;
-    document.getElementById('explorer').textContent = userData.explorer_name || '-';
     document.getElementById('role').textContent = userData.role;
-    document.getElementById('createdAt').textContent = new Date(userData.createdAt).toLocaleDateString('es-ES');
-
+    document.getElementById('createdAt').textContent = new Date(userData.created_at).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    
     // Estado (soft delete)
     const deletedAtElement = document.getElementById('deletedAt');
     if (userData.deleted_at) {
@@ -66,11 +69,8 @@ async function loadUserData(userId) {
     document.getElementById('viewPokedexBtn').href = `/admin/pokedex?userId=${userId}`;
     document.getElementById('viewSlotsBtn').href = `/admin/slots?userId=${userId}`;
 
-    // Cargar Pokémon capturados
-    await loadPokemonCount(userId);
-
-    // Cargar slots
-    await loadSlotCount(userId);
+    // Cargar estadísticas completas (1 request en lugar de 2)
+    await loadStatistics(userId);
 
   } catch (error) {
     console.error('Error cargando datos del usuario:', error);
@@ -78,43 +78,32 @@ async function loadUserData(userId) {
 }
 
 // ============================================================================
-// CARGAR CONTADOR POKÉMON
+// CARGAR ESTADÍSTICAS COMPLETAS (optimizado - 1 request)
 // ============================================================================
 
-async function loadPokemonCount(userId) {
+async function loadStatistics(userId) {
   try {
     const accessToken = localStorage.getItem('access_token');
 
-    const response = await fetch(`/api/users/${userId}/pokedex`, {
+    const response = await fetch(`/api/users/${userId}/stats`, {
       headers: { 'Authorization': `Bearer ${accessToken}` }
     });
 
-    const pokedex = await response.json();
-    document.getElementById('pokemonCount').textContent = pokedex.length;
+    if (!response.ok) {
+      throw new Error('Error obteniendo estadísticas');
+    }
+
+    const stats = await response.json();
+
+    // Actualizar Pokémon capturados
+    document.getElementById('pokemonCount').textContent = stats.unique_pokemon || 0;
+
+    // Actualizar Slots disponibles
+    document.getElementById('slotCount').textContent = stats.total_slots || 0;
 
   } catch (error) {
-    console.error('Error cargando Pokémon:', error);
+    console.error('Error cargando estadísticas:', error);
     document.getElementById('pokemonCount').textContent = '0';
-  }
-}
-
-// ============================================================================
-// CARGAR CONTADOR SLOTS
-// ============================================================================
-
-async function loadSlotCount(userId) {
-  try {
-    const accessToken = localStorage.getItem('access_token');
-
-    const response = await fetch(`/api/users/${userId}/slots`, {
-      headers: { 'Authorization': `Bearer ${accessToken}` }
-    });
-
-    const slots = await response.json();
-    document.getElementById('slotCount').textContent = slots.length;
-
-  } catch (error) {
-    console.error('Error cargando slots:', error);
     document.getElementById('slotCount').textContent = '0';
   }
 }
@@ -140,7 +129,7 @@ function setupEditButtons() {
 
 async function editField(field) {
   const currentValue = document.getElementById(field === 'password' ? 'password' : field)?.textContent || '';
-  
+
   let newValue;
 
   if (field === 'role') {
@@ -223,7 +212,7 @@ function setupActionButtons() {
   const restoreBtn = document.getElementById('restoreBtn');
 
   if (deleteBtn) {
-    deleteBtn.addEventListener('click', () => deleteUser(currentUserId));
+    deleteBtn.addEventListener('click', () => permanentlyDeleteUser(currentUserId));
   }
 
   if (restoreBtn) {
@@ -232,31 +221,36 @@ function setupActionButtons() {
 }
 
 // ============================================================================
-// ELIMINAR USUARIO (SOFT DELETE)
+// ELIMINAR USUARIO PERMANENTEMENTE (HARD DELETE)
 // ============================================================================
 
-async function deleteUser(userId) {
-  if (!confirm(`¿Eliminar a ${userData.username}?`)) {
+async function permanentlyDeleteUser(userId) {
+  if (!confirm(`¿ELIMINAR PERMANENTEMENTE a ${userData.username}? Esta acción NO se puede deshacer.`)) {
+    return;
+  }
+
+  if (!confirm('¿ESTÁS SEGURO? Esta es la última oportunidad para cancelar.')) {
     return;
   }
 
   try {
     const accessToken = localStorage.getItem('access_token');
 
-    const response = await fetch(`/api/users/${userId}`, {
+    const response = await fetch(`/api/users/${userId}/permanent`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${accessToken}` }
     });
 
     if (response.ok) {
-      alert('Usuario eliminado');
-      loadUserData(userId);
+      alert('Usuario eliminado permanentemente');
+      window.location.href = '/admin/users';
     } else {
-      alert('Error al eliminar usuario');
+      const data = await response.json();
+      alert(`Error: ${data.error}`);
     }
 
   } catch (error) {
-    console.error('Error eliminando usuario:', error);
+    console.error('Error eliminando usuario permanentemente:', error);
   }
 }
 

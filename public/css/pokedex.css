@@ -1,13 +1,19 @@
 /* ============================================================================
    POKÉSECTOR ADMIN PANEL - POKÉDEX CSS
+   Estilos de tabla aplicados desde users.css
    ============================================================================ */
 
 .pokedex-container {
   width: 100%;
+  max-width: calc(100vw - 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pokedex-header {
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .header-top {
@@ -17,28 +23,11 @@
   margin-bottom: 1rem;
 }
 
-.btn-back {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: var(--green-med);
-  color: var(--white);
-  border-radius: 0.5rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  cursor: pointer;
-  border: none;
-
-  &:hover {
-    background-color: var(--green-dark);
-    transform: translateX(-2px);
-  }
-}
-
 .pokedex-title {
   font-size: 2rem;
   font-weight: 700;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
   color: var(--green-dark);
   margin: 0;
 }
@@ -97,101 +86,85 @@
   }
 }
 
-.sort-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
 
-  label {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-}
 
-.filter-select {
-  font-family: var(--font-family);
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  border: 2px solid var(--white);
-  border-radius: 0.5rem;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: var(--green-med);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--green-med);
-    box-shadow: 0 0 0 3px rgba(129, 170, 99, 0.2);
-  }
-}
-
-.btn-add {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--green-med);
-  color: var(--white);
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: var(--font-family);
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: var(--green-dark);
-    box-shadow: 0 4px 12px rgba(129, 170, 99, 0.4);
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
-
-.table-wrapper {
-  background-color: var(--white);
-  border: 2px solid var(--green-med);
-  border-radius: 1rem;
-  overflow: hidden;
-  width: 100%;
-  margin-bottom: 2rem;
-}
+/* ============================================================================
+   TABLA - ESTILOS APLICADOS DESDE USERS.CSS
+   ============================================================================ */
 
 .pokedex-table {
-  width: 100%;
+  margin: 0 auto;
+  width: 58rem;
+  min-width: 58rem;
   border-collapse: collapse;
   font-size: 1rem;
 
   thead {
-    background-color: var(--green-dark);
-    color: var(--white);
-    font-weight: 600;
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    font-weight: 400;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+
+    span {
+      &:hover {
+        animation: blink-logo 5s;
+        cursor: pointer;
+      }
+
+      &::after {
+        position: absolute;
+        content: '';
+        left: 0;
+        bottom: -0.3rem;
+        width: 0%;
+        height: 0.15rem;
+        background-color: var(--bg-primary);
+        transition: all 0.1s ease;
+      }
+
+      &:hover::after {
+        width: 100%;
+      }
+    }
+
+    .sort-icon {
+      display: none;
+      margin-left: 1rem;
+      font-weight: 400;
+      font-size: 1.5rem;
+      font-style: normal;
+    }
+
+    span[data-sort-state="up"]~.sort-icon:nth-of-type(1) {
+      display: inline;
+    }
+
+    span[data-sort-state="down"]~.sort-icon:nth-of-type(2) {
+      display: inline;
+    }
+
+    span[data-sort-state="none"]~.sort-icon:nth-of-type(3) {
+      display: inline;
+    }
   }
 
   th {
     padding: 1.25rem 1rem;
     text-align: left;
-    border-bottom: 2px solid var(--green-med);
   }
 
   td {
     padding: 1rem;
-    border-bottom: 1px solid var(--white);
-    color: var(--text-primary);
+    border-bottom: 0.1rem solid var(--green-med);
+    color: var(--black);
   }
 
   tbody tr {
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: rgba(129, 170, 99, 0.1);
+      background-color: rgba(129, 170, 99, 0.2);
     }
 
     &:last-child td {
@@ -200,21 +173,47 @@
   }
 }
 
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 0.1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-family: var(--font-family);
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
 .btn-small-delete {
   padding: 0.5rem 1rem;
   background-color: var(--red);
   color: var(--white);
   border: none;
-  border-radius: 0.35rem;
+  border-radius: 0.2rem;
   font-size: 0.875rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
   cursor: pointer;
   font-family: var(--font-family);
   transition: all 0.3s ease;
 
   &:hover {
-    opacity: 0.85;
-    transform: translateY(-1px);
+    animation: blink-logo 5s infinite;
   }
 
   &:active {
@@ -229,6 +228,8 @@
   font-size: 1rem;
   color: var(--black);
   border-top: 2px solid var(--green-med);
+  font-weight: 600;
+  letter-spacing: 0.1rem;
 }
 
 .modal {
@@ -248,65 +249,6 @@
   }
 }
 
-.modal-content {
-  background-color: var(--white);
-  border: 2px solid var(--green-med);
-  border-radius: 1rem;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease;
-
-  @keyframes slideUp {
-    from {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-}
-
-.modal-header {
-  padding: 1.5rem;
-  border-bottom: 2px solid var(--green-med);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--green-dark);
-  }
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--black);
-  transition: all 0.3s ease;
-
-  &:hover {
-    color: var(--green-dark);
-  }
-}
-
-.modal-body {
-  padding: 1.5rem;
-}
-
-.modal-footer {
-  padding: 1.5rem;
-  border-top: 2px solid var(--white);
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-}
 
 .form-group {
   margin-bottom: 1.5rem;
@@ -339,35 +281,48 @@
   }
 }
 
-.btn-secondary {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--white);
-  color: var(--text-primary);
-  border: none;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: var(--font-family);
-  transition: all 0.3s ease;
+#addPokemonForm div:nth-of-type(4) label {
+  display: flex;
+  gap: 1rem;
 
-  &:hover {
-    background-color: var(--black);
-    color: var(--bg-primary);
+  input {
+    width: 1.5rem;
   }
+
 }
 
-.btn-primary {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--green-med);
-  color: var(--white);
-  border: none;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
+#pokemonSuggestions {
+  font-weight: 400!important;
+}
+
+
+.filter-select {
   font-family: var(--font-family);
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  outline: none !important;
+  border: none !important;
+  background-color: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: none;
+
+  &:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+  }
 
   &:hover {
-    background-color: var(--green-dark);
+    outline: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  &:active {
+    outline: none;
+    border: none;
+    box-shadow: none;
   }
 }

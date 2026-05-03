@@ -2,44 +2,58 @@ extends layout
 
 block content
   .users-container
-    //- Encabezado
+    //- Header
     .users-header
-      h1.users-title Gestionar Usuarios
-      p.users-subtitle Administra los usuarios del sistema
+      h1.users-title Gestión de Usuarios
+      p.users-subtitle Administra todos los usuarios del sistema
 
     //- Filtros
     .users-filters
       .filter-group
-        label(for='roleFilter') Filtrar por Rol:
+        label(for='roleFilter') Filtrar por rol:
         select#roleFilter.filter-select
-          option(value='todos') Todos
-          option(value='user') Users
-          option(value='admin') Admins
+          option(value='all') Todos
+          option(value='user') Usuario
+          option(value='admin') Admin
 
     //- Tabla de usuarios
     .table-wrapper
       table.users-table
         thead
           tr
-            th.sortable#usernameHeader
-              span Username
-              i.sort-icon 🔤
-            th.sortable#explorerHeader
-              span Explorador
-              i.sort-icon 🔤
-            th.sortable#roleHeader
-              span Role
-              i.sort-icon 🔤
-            th Registrado
+            th
+              span(data-sort-state='none') ID
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Usuario
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Rol
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
+            th
+              span(data-sort-state='none') Creado
+              .sort-icon ↑
+              .sort-icon ↓
+              .sort-icon ↕
             th Acciones
 
         tbody#usersTableBody
           tr
             td(colspan='5').loading Cargando usuarios...
 
-    //- Paginación (opcional)
+    //- Paginación
     .users-pagination
-      span#userCount Total usuarios: 0
+      #pageInfo Página 1 de 1
+      .pagination-controls
+        button#prevBtn.pagination-btn(onclick='previousPage()' disabled) ‹ Anterior
+        button#nextBtn.pagination-btn(onclick='nextPage()') Siguiente ›
 
 block scripts
+  script(src='/js/multiColumnSort.js')
   script(src='/js/users.js')

@@ -143,4 +143,3 @@ JOIN users u ON r.user_id = u.id
 WHERE u.deleted_at IS NULL
   AND (r.captured_count + r.escaped_count) >= 10
 ORDER BY r.difficulty_id, r.captured_count DESC;
-

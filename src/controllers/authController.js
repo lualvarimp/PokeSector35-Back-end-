@@ -19,7 +19,8 @@ export async function register(req, res) {
       message: 'Usuario registrado', 
       access_token: accessToken,
       refresh_token: refreshToken,
-      user_id: user.id 
+      user_id: user.id,
+      role: user.role
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -29,6 +30,7 @@ export async function register(req, res) {
 /**
  * Endpoint: POST /api/auth/login
  * Autentica un usuario y devuelve tokens JWT
+ * ⚠️ SOLO permite login a usuarios con rol 'admin'
  * @param {Object} req - Express request
  * @param {string} req.body.username - Nombre de usuario
  * @param {string} req.body.password - Contraseña
@@ -38,6 +40,14 @@ export async function login(req, res) {
   try {
     const { username, password } = req.body;
     const user = await loginUser(username, password);
+
+    // ✅ VALIDACIÓN: Solo admin puede loguear
+    if (user.role !== 'admin') {
+      return res.status(403).json({ 
+        error: 'SOLO ADMINISTRADORES' 
+      });
+    }
+
     const accessToken = generateAccessToken(user);
     const refreshToken = await generateRefreshToken(user);
 
@@ -45,7 +55,8 @@ export async function login(req, res) {
       message: 'Login exitoso', 
       access_token: accessToken,
       refresh_token: refreshToken,
-      user_id: user.id 
+      user_id: user.id,
+      role: user.role
     });
   } catch (error) {
     res.status(401).json({ error: error.message });
