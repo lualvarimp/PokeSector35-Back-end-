@@ -160,8 +160,13 @@
     color: var(--black);
   }
 
+
+
+
   tbody tr {
     transition: all 0.3s ease;
+
+
 
     &:hover {
       background-color: rgba(129, 170, 99, 0.2);
@@ -172,6 +177,11 @@
     }
   }
 }
+
+#pokemonTableBody tr td {
+  color: var(--green-dark);
+}
+
 
 .actions-cell {
   display: flex;
@@ -228,6 +238,7 @@
   font-size: 1rem;
   color: var(--black);
   border-top: 2px solid var(--green-med);
+  color: var(--green-dark);
   font-weight: 600;
   letter-spacing: 0.1rem;
 }
@@ -289,10 +300,14 @@
     width: 1.5rem;
   }
 
+  span {
+    font-weight: 400;
+  }
+
 }
 
 #pokemonSuggestions {
-  font-weight: 400!important;
+  font-weight: 400 !important;
 }
 
 
@@ -325,4 +340,44 @@
     border: none;
     box-shadow: none;
   }
+}
+
+
+/* ============================================================================
+   AUTOCOMPLETE POKÉMON - SUGERENCIAS
+   ============================================================================ */
+
+#pokemonSuggestions {
+  position: absolute;
+  background: var(--white);
+  color: var(--black);
+  border: 2px solid var(--green-med);
+  border-radius: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1001;
+  display: none;
+  min-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#pokemonSuggestions>div {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+#pokemonSuggestions>div:hover {
+  background-color: rgba(129, 170, 99, 0.1);
+}
+
+#pokemonSuggestions>div strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+#pokemonSuggestions>div span {
+  color: #999;
+  font-size: 0.9rem;
 }

@@ -7,6 +7,7 @@
 const ITEMS_PER_PAGE = 20;
 let currentPage = 1;
 let allUsers = [];
+let filteredUsers = []; // Almacenar usuarios filtrados
 let sorter = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadUsers() {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const roleFilter = document.getElementById('roleFilter').value;
 
     const response = await fetch('/api/users', {
       headers: { 'Authorization': `Bearer ${accessToken}` }
@@ -38,24 +38,18 @@ async function loadUsers() {
       throw new Error('Error cargando usuarios');
     }
 
-    let users = await response.json();
+    allUsers = await response.json();
+    filteredUsers = [...allUsers];
 
-    // Filtrar por rol si es necesario
-    if (roleFilter !== 'all') {
-      users = users.filter(u => u.role === roleFilter);
-    }
-
-    allUsers = users;
-
-    // Inicializar sorter
+    // Inicializar sorter SOLO LA PRIMERA VEZ
     if (!sorter) {
-      sorter = new UsersSort('.users-table', allUsers, renderUsers);
+      sorter = new UsersSort('.users-table', filteredUsers, renderUsers);
     } else {
-      sorter.setData(allUsers);
+      sorter.setData(filteredUsers);
     }
 
     currentPage = 1;
-    renderUsers(allUsers);
+    renderUsers(filteredUsers);
 
   } catch (error) {
     console.error('Error cargando usuarios:', error);
@@ -143,15 +137,15 @@ function updatePaginationUI(totalPages) {
 function previousPage() {
   if (currentPage > 1) {
     currentPage--;
-    renderUsers(sorter.getFilteredData());
+    renderUsers(filteredUsers);
   }
 }
 
 function nextPage() {
-  const totalPages = Math.ceil(sorter.getFilteredData().length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
   if (currentPage < totalPages) {
     currentPage++;
-    renderUsers(sorter.getFilteredData());
+    renderUsers(filteredUsers);
   }
 }
 
@@ -161,13 +155,56 @@ function nextPage() {
 
 function setupFilters() {
   const roleFilter = document.getElementById('roleFilter');
+  const letterFilter = document.getElementById('letterFilter');
 
   if (roleFilter) {
     roleFilter.addEventListener('change', () => {
       currentPage = 1;
-      loadUsers();
+      applyFilters();
     });
   }
+
+  if (letterFilter) {
+    letterFilter.addEventListener('change', () => {
+      currentPage = 1;
+      applyFilters();
+    });
+  }
+}
+
+// ============================================================================
+// APLICAR FILTROS
+// ============================================================================
+
+function applyFilters() {
+  const roleFilter = document.getElementById('roleFilter').value;
+  const letterFilter = document.getElementById('letterFilter').value;
+
+  // Filtrar datos originales
+  filteredUsers = allUsers.filter(user => {
+    // Filtrar por rol
+    if (roleFilter !== 'all' && user.role !== roleFilter) {
+      return false;
+    }
+
+    // Filtrar por letra inicial del usuario
+    if (letterFilter !== 'all') {
+      const firstLetter = user.username.charAt(0).toUpperCase();
+      if (firstLetter !== letterFilter) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  // Actualizar sorter con datos filtrados
+  if (sorter) {
+    sorter.setData(filteredUsers);
+  }
+
+  currentPage = 1;
+  renderUsers(filteredUsers);
 }
 
 // ============================================================================

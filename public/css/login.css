@@ -3,7 +3,7 @@
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100%;
 }
 
 /* Ocultar menú SOLO en la página de login */
@@ -16,7 +16,6 @@ body.login-page nav.navbar ul {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
 
   transition: all 0.3s ease;
 }
@@ -162,7 +161,6 @@ input:-webkit-autofill:focus {
 }
 
 .login-footer {
-
   color: var(--green-dark);
   padding: 1rem;
   text-align: center;

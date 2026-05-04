@@ -74,6 +74,7 @@ body {
   color: var(--text-primary);
   overflow-x: hidden;
   transition: all 0.3s ease;
+  animation: blink-web 45s infinite;
 }
 
 h1,
@@ -363,6 +364,9 @@ main.main-content {
   border-radius: 0.2rem;
   box-shadow: 0 0 0.3rem var(--green-med);
   touch-action: pan-x;
+
+  background: var(--green-white);
+  color: var(--black);
 }
 
 /* =============== BUTTONS =============== */
@@ -411,18 +415,29 @@ main.main-content {
 
 
 #nextBtn {
-  font-size: 1rem;
+  font-size: 0.8rem;
 
 }
 
 #prevBtn {
-  font-size: 1rem;
+  font-size: 0.8rem;
 
 }
 
 
 
 /* =============== MODAL =============== */
+
+#slotModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+  background: none;
+}
+
+
 .modal-content {
   background: var(--green-med);
   border: 2px solid var(--green-med);
@@ -431,6 +446,8 @@ main.main-content {
   max-width: 500px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s ease;
+  height: fit-content;
+
 
   @keyframes slideUp {
     from {
@@ -573,6 +590,43 @@ main.main-content {
   }
 
   5% {
+    opacity: 100%;
+  }
+
+  100% {
+    opacity: 100%;
+  }
+}
+
+@keyframes blink-web {
+  0% {
+    opacity: 100%;
+  }
+
+  0.05% {
+    opacity: 0%;
+    filter: invert(0%);
+  }
+
+  0.10% {
+    opacity: 50%;
+    filter: invert(100%);
+  }
+
+  0.15% {
+    opacity: 0%;
+    filter: invert(0%);
+  }
+
+  0.20% {
+    opacity: 50%;
+  }
+
+  0.25% {
+    opacity: 0%;
+  }
+
+ 0.50% {
     opacity: 100%;
   }
 

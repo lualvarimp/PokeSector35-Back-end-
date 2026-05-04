@@ -173,7 +173,8 @@ class PokedexSort extends MultiColumnSort {
       0: () => item.pokemon_id,
       1: () => item.pokemon_name,
       2: () => item.slot_id || 0,
-      3: () => new Date(item.captured_at).getTime()
+      // Columna 3 (Capturado) - NO ordenable
+      4: () => ''
     };
 
     const getter = columnMap[columnIndex];
@@ -190,8 +191,8 @@ class UsersSort extends MultiColumnSort {
     const columnMap = {
       0: () => item.id,
       1: () => item.username,
-      2: () => item.role,
-      3: () => new Date(item.created_at).getTime(),
+      // Columna 2 (Rol) - NO ordenable
+      // Columna 3 (Creado) - NO ordenable
       4: () => item.deleted_at ? 'eliminado' : 'activo'
     };
 
@@ -205,42 +206,20 @@ class UsersSort extends MultiColumnSort {
 // ============================================================================
 
 class RankingSort extends MultiColumnSort {
-  constructor(tableSelector, dataArray, renderFunction) {
-    super(tableSelector, dataArray, renderFunction);
-    // Añadir posición a cada item
-    this.allData = dataArray.map((item, index) => ({
-      ...item,
-      _originalPosition: index + 1
-    }));
-    this.filteredData = [...this.allData];
-  }
-
   getColumnValue(item, columnIndex) {
     const columnMap = {
-      0: () => item._originalPosition || 0, // Pos. - posición original en el array
+      0: () => item.username, // Para ordenar por usuario usamos username
       1: () => item.username,
       2: () => item.captured_count || 0,
-      3: () => item.escaped_count || 0,
+      // Columna 3 (Esc.) - NO ordenable
       4: () => {
-        // % Capt. - calcular porcentaje
         const total = (item.captured_count || 0) + (item.escaped_count || 0);
         return total > 0 ? (item.captured_count / total) * 100 : 0;
-      },
-      5: () => item.difficulty_id || '',
-      6: () => new Date(item.completed_at).getTime() // Fecha como timestamp para ordenar correctamente
+      }
     };
 
     const getter = columnMap[columnIndex];
     return getter ? getter() : '';
-  }
-
-  setData(newData) {
-    this.allData = newData.map((item, index) => ({
-      ...item,
-      _originalPosition: index + 1
-    }));
-    this.filteredData = [...this.allData];
-    this.applySort();
   }
 }
 

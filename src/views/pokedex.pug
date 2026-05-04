@@ -7,7 +7,6 @@ block content
       .header-top
         a.btn-back(href='javascript:history.back()') ← Volver
         h1.pokedex-title Pokédex del Usuario
-      p.pokedex-subtitle Gestiona los Pokémon capturados
 
     //- Filtros y acciones (solo búsqueda)
     .pokedex-controls
@@ -41,11 +40,7 @@ block content
               .sort-icon ↑
               .sort-icon ↓
               .sort-icon ↕
-            th
-              span(data-sort-state='none') Capturado
-              .sort-icon ↑
-              .sort-icon ↓
-              .sort-icon ↕
+            th Capturado
             th Acciones
 
         tbody#pokemonTableBody

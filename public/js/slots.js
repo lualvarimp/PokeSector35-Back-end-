@@ -46,6 +46,10 @@ async function loadSlots() {
     }
 
     allSlots = await response.json();
+    
+    // Ordenar por slot_number
+    allSlots.sort((a, b) => a.slot_number - b.slot_number);
+    
     filteredSlots = [...allSlots];
     renderSlots(filteredSlots);
 
@@ -69,23 +73,23 @@ function renderSlots(slots) {
   grid.innerHTML = slots.map(slot => `
     <div class="slot-card" style="background: linear-gradient(135deg, ${slot.color}dd, ${slot.color}aa);">
       <div class="slot-avatar-section">
-        <div class="slot-avatar-circle">${slot.explorer.charAt(0).toUpperCase()}</div>
+        <div class="slot-avatar-circle">${slot.explorer_name.charAt(0).toUpperCase()}</div>
         <div class="slot-number-top">Slot ${slot.slot_number}</div>
       </div>
 
       <div class="slot-header">
         <span></span>
-        <div class="slot-status ${slot.game_status || 'empty'}">
-          ${slot.game_status === 'active' ? 'En progreso' : 'Vacío'}
+        <div class="slot-status ${slot.is_game_over ? 'active' : 'empty'}">
+          ${slot.is_game_over ? 'Completado' : 'Activo'}
         </div>
       </div>
 
       <div class="slot-content">
-        <div class="slot-explorer">👤 ${slot.explorer || 'Sin nombre'}</div>
+        <div class="slot-explorer">👤 ${slot.explorer_name || 'Sin nombre'}</div>
         
         <div class="slot-info-item">
           <span class="slot-info-label">Estado:</span>
-          <span class="slot-info-value">${slot.game_status === 'active' ? 'En progreso' : 'Vacío'}</span>
+          <span class="slot-info-value">${slot.is_game_over ? 'Completado' : 'Activo'}</span>
         </div>
 
         <div class="slot-info-item">
@@ -97,7 +101,7 @@ function renderSlots(slots) {
 
         <div class="slot-info-item">
           <span class="slot-info-label">Fecha de Creación:</span>
-          <span class="slot-info-value">${new Date(slot.createdAt).toLocaleDateString('es-ES')}</span>
+          <span class="slot-info-value">${new Date(slot.created_at).toLocaleDateString('es-ES')}</span>
         </div>
 
         <div class="slot-info-item">
@@ -143,7 +147,7 @@ function applyFilters() {
   const searchTerm = document.getElementById('slotSearch').value.toLowerCase();
 
   filteredSlots = allSlots.filter(slot => {
-    return slot.explorer.toLowerCase().includes(searchTerm) || 
+    return slot.explorer_name.toLowerCase().includes(searchTerm) || 
            slot.slot_number.toString().includes(searchTerm);
   });
 
@@ -168,7 +172,7 @@ function openSlotModal(slotId = null) {
     const slot = allSlots.find(s => s.id === slotId);
     if (slot) {
       document.getElementById('slotNumber').value = slot.slot_number;
-      document.getElementById('explorerName').value = slot.explorer;
+      document.getElementById('explorerName').value = slot.explorer_name;
       document.getElementById('difficulty').value = slot.difficulty_id;
       document.getElementById('slotColor').value = slot.color;
     }
@@ -180,6 +184,17 @@ function openSlotModal(slotId = null) {
 }
 
 // ============================================================================
+// CERRAR MODAL
+// ============================================================================
+
+function closeSlotModal() {
+  const modal = document.getElementById('slotModal');
+  modal.style.display = 'none';
+  editingSlotId = null;
+  document.getElementById('slotForm').reset();
+}
+
+// ============================================================================
 // EDITAR SLOT
 // ============================================================================
 
@@ -188,7 +203,7 @@ async function editSlot(slotId) {
 }
 
 // ============================================================================
-// GUARDAR SLOT
+// GUARDAR SLOT (CREAR O EDITAR AUTOMÁTICAMENTE)
 // ============================================================================
 
 async function saveSlot() {
@@ -204,20 +219,25 @@ async function saveSlot() {
 
   try {
     const accessToken = localStorage.getItem('access_token');
+    const slotNum = parseInt(slotNumber);
 
-    let url = `/api/users/${userId}/slots`;
+    // Detectar automáticamente si el slot existe
+    let existingSlot = allSlots.find(s => s.slot_number === slotNum);
     let method = 'POST';
-    let body = {
-      slot_number: parseInt(slotNumber),
-      explorer_name: explorerName,
+    let url = `/api/users/${userId}/slots`;
+
+    if (existingSlot) {
+      // Si existe, actualizar por slotNumber
+      url += `/${slotNum}`;
+      method = 'PUT';
+    }
+
+    const body = {
+      slot_number: slotNum,
+      explorer: explorerName,
       difficulty_id: difficulty,
       color: color
     };
-
-    if (editingSlotId) {
-      url += `/${editingSlotId}`;
-      method = 'PUT';
-    }
 
     const response = await fetch(url, {
       method,
@@ -231,7 +251,8 @@ async function saveSlot() {
     const data = await response.json();
 
     if (response.ok) {
-      alert(editingSlotId ? 'Slot actualizado' : 'Slot creado correctamente');
+      const isUpdate = method === 'PUT';
+      alert(isUpdate ? 'Slot actualizado correctamente' : 'Slot creado correctamente');
       closeSlotModal();
       loadSlots();
     } else {
@@ -255,8 +276,15 @@ async function deleteSlot(slotId) {
 
   try {
     const accessToken = localStorage.getItem('access_token');
+    
+    // Encontrar el slot_number por ID
+    const slot = allSlots.find(s => s.id === slotId);
+    if (!slot) {
+      alert('Slot no encontrado');
+      return;
+    }
 
-    const response = await fetch(`/api/users/${userId}/slots/${slotId}`, {
+    const response = await fetch(`/api/users/${userId}/slots/${slot.slot_number}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${accessToken}` }
     });

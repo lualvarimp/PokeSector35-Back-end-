@@ -94,18 +94,6 @@ function createSuggestionsDiv() {
   if (!suggestionsDiv) {
     suggestionsDiv = document.createElement('div');
     suggestionsDiv.id = 'pokemonSuggestions';
-    suggestionsDiv.style.cssText = `
-      position: absolute;
-      background: white;
-      border: 2px solid var(--green-med);
-      border-radius: 0.5rem;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 1001;
-      display: none;
-      min-width: 300px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    `;
     
     const formGroup = document.querySelector('.form-group:has(#pokemonName)');
     if (formGroup) {
@@ -124,7 +112,15 @@ function createSuggestionsDiv() {
 async function fetchPokemonById(id) {
   try {
     const pokemonNameInput = document.getElementById('pokemonName');
-    
+    const numId = parseInt(id);
+
+    // Validar que el ID sea <= 151
+    if (numId > 151) {
+      pokemonNameInput.value = '';
+      alert('Solo se permiten Pokémon de la generación 1 (ID 1-151)');
+      return;
+    }
+
     // Buscar en cache primero
     if (pokemonCache[`id_${id}`]) {
       const cached = pokemonCache[`id_${id}`];
@@ -140,6 +136,14 @@ async function fetchPokemonById(id) {
     }
 
     const data = await response.json();
+
+    // Validar que el ID sea <= 151
+    if (data.id > 151) {
+      pokemonNameInput.value = '';
+      alert('Solo se permiten Pokémon de la generación 1 (ID 1-151)');
+      return;
+    }
+
     const name = data.name.charAt(0).toUpperCase() + data.name.slice(1);
     
     // Guardar en cache
@@ -167,11 +171,14 @@ async function fetchPokemonByName(name, suggestionsDiv) {
 
     const data = await response.json();
     
-    // Filtrar por nombre que coincida con las letras escritas
+    // Filtrar por nombre que coincida con las letras escritas Y que el ID sea <= 151
     const searchTerm = name.toLowerCase();
-    const matches = data.results.filter(p => 
-      p.name.toLowerCase().startsWith(searchTerm)
-    ).slice(0, 10); // Limitar a 10 sugerencias
+    const matches = data.results
+      .filter(p => {
+        const pokemonId = p.url.split('/')[6];
+        return p.name.toLowerCase().startsWith(searchTerm) && parseInt(pokemonId) <= 151;
+      })
+      .slice(0, 10); // Limitar a 10 sugerencias
 
     if (matches.length === 0) {
       suggestionsDiv.innerHTML = '<div style="padding: 10px; color: #999;">No hay coincidencias</div>';
@@ -180,15 +187,15 @@ async function fetchPokemonByName(name, suggestionsDiv) {
     }
 
     // Crear HTML de sugerencias
-    suggestionsDiv.innerHTML = matches.map(pokemon => `
-      <div onclick="selectPokemonSuggestion('${pokemon.name}', ${pokemon.url.split('/')[6]})" 
-           style="padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;"
-           onmouseover="this.style.background='rgba(129, 170, 99, 0.1)'"
-           onmouseout="this.style.background='transparent'">
+    suggestionsDiv.innerHTML = matches.map(pokemon => {
+      const pokemonId = pokemon.url.split('/')[6];
+      return `
+      <div onclick="selectPokemonSuggestion('${pokemon.name}', ${pokemonId})">
         <strong>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</strong>
-        <span style="color: #999; font-size: 0.9rem;">#${pokemon.url.split('/')[6]}</span>
+        <span>#${pokemonId}</span>
       </div>
-    `).join('');
+    `;
+    }).join('');
 
     suggestionsDiv.style.display = 'block';
 
@@ -389,6 +396,19 @@ async function addPokemon() {
     return;
   }
 
+  const numId = parseInt(pokemonId);
+
+  // Validar que ID sea <= 151
+  if (numId > 151) {
+    alert('Solo se permiten Pokémon de la generación 1 (ID 1-151)');
+    return;
+  }
+
+  if (numId < 1) {
+    alert('El ID debe ser mayor que 0');
+    return;
+  }
+
   try {
     const accessToken = localStorage.getItem('access_token');
 
@@ -405,7 +425,7 @@ async function addPokemon() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        pokemon_id: parseInt(pokemonId),
+        pokemon_id: numId,
         pokemon_name: pokemonName,
         slot_id: slotId ? parseInt(slotId) : null,
         is_global: isGlobal

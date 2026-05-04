@@ -1,17 +1,16 @@
 // ============================================================================
 // POKÉSECTOR ADMIN PANEL - RANKING.JS
 // Gestión de tabla de ranking global
-// Utiliza multiColumnSort.js para ordenamiento multi-columna
 // ============================================================================
 
 const ITEMS_PER_PAGE = 40;
 let currentPage = 1;
 let allRanking = [];
+let displayRanking = []; // Array con posición asignada
 let sorter = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   const accessToken = localStorage.getItem('access_token');
-  const userRole = localStorage.getItem('user_role');
 
   if (!accessToken) {
     window.location.href = '/login';
@@ -35,21 +34,38 @@ async function loadRanking() {
     });
     const ranking = await response.json();
 
-    allRanking = ranking;
+    // Asignar posiciones globales SOLO UNA VEZ al cargar
+    allRanking = ranking.map((item, index) => ({
+      ...item,
+      _globalPosition: index + 1
+    }));
+    
+    displayRanking = [...allRanking];
 
-    // Inicializar sorter con datos
+    // Inicializar sorter
     if (!sorter) {
-      sorter = new RankingSort('.ranking-table', allRanking, renderTable);
+      sorter = new RankingSort('.ranking-table', displayRanking, onSortComplete);
     } else {
-      sorter.setData(allRanking);
+      sorter.setData(displayRanking);
     }
 
     currentPage = 1;
-    renderTable(allRanking);
+    renderTable(displayRanking);
 
   } catch (error) {
     console.error('Error cargando ranking:', error);
   }
+}
+
+// ============================================================================
+// CALLBACK CUANDO EL SORTER TERMINA DE ORDENAR
+// ============================================================================
+
+function onSortComplete(sortedData) {
+  // No reasignar posiciones - mantener _globalPosition original
+  displayRanking = sortedData;
+  currentPage = 1;
+  renderTable(displayRanking);
 }
 
 // ============================================================================
@@ -69,10 +85,9 @@ function renderTable(ranking) {
   // Calcular paginación
   const totalPages = Math.ceil(ranking.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedRanking = ranking.slice(startIndex, endIndex);
+  const paginatedRanking = ranking.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  tbody.innerHTML = paginatedRanking.map((entry, index) => {
+  tbody.innerHTML = paginatedRanking.map((entry) => {
     const totalEncounters = entry.captured_count + entry.escaped_count;
     const percentage = totalEncounters > 0 
       ? ((entry.captured_count / totalEncounters) * 100).toFixed(2)
@@ -82,8 +97,9 @@ function renderTable(ranking) {
       month: '2-digit',
       year: 'numeric'
     });
-    // Usar _originalPosition del item (viene del sorter)
-    const position = entry._originalPosition || (startIndex + index + 1);
+    
+    // Usar posición global original, no índice de la página
+    const position = entry._globalPosition;
     const rowClass = position <= 3 ? `top-${position}` : '';
 
     return `
@@ -107,7 +123,6 @@ function renderTable(ranking) {
   }).join('');
 
   updatePaginationUI(totalPages);
-  updateRankingCount(ranking.length);
 }
 
 // ============================================================================
@@ -139,15 +154,15 @@ function updatePaginationUI(totalPages) {
 function previousPage() {
   if (currentPage > 1) {
     currentPage--;
-    renderTable(sorter.getFilteredData());
+    renderTable(displayRanking);
   }
 }
 
 function nextPage() {
-  const totalPages = Math.ceil(sorter.getFilteredData().length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(displayRanking.length / ITEMS_PER_PAGE);
   if (currentPage < totalPages) {
     currentPage++;
-    renderTable(sorter.getFilteredData());
+    renderTable(displayRanking);
   }
 }
 
@@ -157,9 +172,14 @@ function nextPage() {
 
 function setupFilters() {
   const difficultyFilter = document.getElementById('difficultyFilter');
+  const letterFilter = document.getElementById('letterFilter');
 
   if (difficultyFilter) {
     difficultyFilter.addEventListener('change', applyFilters);
+  }
+
+  if (letterFilter) {
+    letterFilter.addEventListener('change', applyFilters);
   }
 }
 
@@ -169,17 +189,24 @@ function setupFilters() {
 
 function applyFilters() {
   const difficultyFilter = document.getElementById('difficultyFilter').value;
+  const letterFilter = document.getElementById('letterFilter').value;
 
-  // Filtrar por dificultad
   sorter.filter(entry => {
     if (difficultyFilter !== 'todos' && entry.difficulty_id !== difficultyFilter) {
       return false;
     }
+    
+    if (letterFilter !== 'all') {
+      const firstLetter = entry.username.charAt(0).toUpperCase();
+      if (firstLetter !== letterFilter) {
+        return false;
+      }
+    }
+    
     return true;
   });
 
   currentPage = 1;
-  renderTable(sorter.getFilteredData());
 }
 
 // ============================================================================
@@ -209,12 +236,4 @@ async function deleteRanking(rankingId, username) {
   } catch (error) {
     console.error('Error eliminando ranking:', error);
   }
-}
-
-// ============================================================================
-// ACTUALIZAR CONTADOR
-// ============================================================================
-
-function updateRankingCount(count) {
-  // Ya no mostramos contador, pero dejamos la función por compatibilidad
 }
