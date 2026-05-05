@@ -82,6 +82,11 @@ function renderUsers(users) {
     const year = date.getFullYear();
     const formattedDate = `${day}/${month}/${year}`;
 
+    // Determinar si el usuario está habilitado o deshabilitado
+    const isDisabled = user.deleted_at !== null;
+    const buttonText = isDisabled ? 'Habilitar' : 'Deshabilitar';
+    const buttonClass = isDisabled ? 'btn-enable' : 'btn-disable';
+
     return `
     <tr>
       <td>#${user.id}</td>
@@ -95,10 +100,7 @@ function renderUsers(users) {
       <td>
         <div class="actions-cell">
           <a href="/admin/users/${user.id}" class="btn-small btn-view">Ver</a>
-          ${user.deleted_at ? 
-            `<button class="btn-small btn-restore" onclick="restoreUser(${user.id})">Restaurar</button>` :
-            `<button class="btn-small btn-delete" onclick="deleteUser(${user.id})">Eliminar</button>`
-          }
+          <button class="btn-small ${buttonClass}" onclick="toggleUserStatus(${user.id}, ${isDisabled})">${buttonText}</button>
         </div>
       </td>
     </tr>
@@ -156,6 +158,7 @@ function nextPage() {
 function setupFilters() {
   const roleFilter = document.getElementById('roleFilter');
   const letterFilter = document.getElementById('letterFilter');
+  const statusFilter = document.getElementById('statusFilter');
 
   if (roleFilter) {
     roleFilter.addEventListener('change', () => {
@@ -170,6 +173,13 @@ function setupFilters() {
       applyFilters();
     });
   }
+
+  if (statusFilter) {
+    statusFilter.addEventListener('change', () => {
+      currentPage = 1;
+      applyFilters();
+    });
+  }
 }
 
 // ============================================================================
@@ -179,6 +189,7 @@ function setupFilters() {
 function applyFilters() {
   const roleFilter = document.getElementById('roleFilter').value;
   const letterFilter = document.getElementById('letterFilter').value;
+  const statusFilter = document.getElementById('statusFilter').value;
 
   // Filtrar datos originales
   filteredUsers = allUsers.filter(user => {
@@ -191,6 +202,17 @@ function applyFilters() {
     if (letterFilter !== 'all') {
       const firstLetter = user.username.charAt(0).toUpperCase();
       if (firstLetter !== letterFilter) {
+        return false;
+      }
+    }
+
+    // Filtrar por estado (habilitado/deshabilitado)
+    if (statusFilter !== 'all') {
+      const isDisabled = user.deleted_at !== null;
+      if (statusFilter === 'enabled' && isDisabled) {
+        return false;
+      }
+      if (statusFilter === 'disabled' && !isDisabled) {
         return false;
       }
     }
@@ -208,59 +230,64 @@ function applyFilters() {
 }
 
 // ============================================================================
-// ELIMINAR USUARIO (SOFT DELETE)
+// TOGGLE ESTADO DEL USUARIO (DESHABILITAR/HABILITAR)
 // ============================================================================
 
-async function deleteUser(userId) {
-  if (!confirm('¿Eliminar usuario? (se puede restaurar después)')) {
+async function toggleUserStatus(userId, isCurrentlyDisabled) {
+  const action = isCurrentlyDisabled ? 'habilitar' : 'deshabilitar';
+  const confirmMessage = isCurrentlyDisabled 
+    ? '¿Habilitar este usuario?' 
+    : '¿Deshabilitar este usuario?';
+
+  if (!confirm(confirmMessage)) {
     return;
   }
 
   try {
     const accessToken = localStorage.getItem('access_token');
 
-    const response = await fetch(`/api/users/${userId}`, {
-      method: 'DELETE',
+    // Si está deshabilitado, restaurarlo. Si está habilitado, deshabilitarlo.
+    let url;
+    let method;
+
+    if (isCurrentlyDisabled) {
+      // Habilitar (restaurar)
+      url = `/api/users/${userId}/restore`;
+      method = 'PUT';
+    } else {
+      // Deshabilitar (soft delete)
+      url = `/api/users/${userId}`;
+      method = 'DELETE';
+    }
+
+    const response = await fetch(url, {
+      method: method,
       headers: { 'Authorization': `Bearer ${accessToken}` }
     });
 
     if (response.ok) {
-      alert('Usuario eliminado');
-      loadUsers();
+      // Actualizar el usuario en el array local
+      const userIndex = allUsers.findIndex(u => u.id === userId);
+      if (userIndex !== -1) {
+        if (isCurrentlyDisabled) {
+          // Restaurar: eliminar deleted_at
+          allUsers[userIndex].deleted_at = null;
+        } else {
+          // Deshabilitar: añadir deleted_at
+          allUsers[userIndex].deleted_at = new Date().toISOString();
+        }
+      }
+
+      // Re-aplicar filtros y renderizar
+      applyFilters();
+      alert(`Usuario ${action} correctamente`);
     } else {
-      alert('Error al eliminar usuario');
+      const data = await response.json();
+      alert(`Error: ${data.error || 'No se pudo actualizar el estado del usuario'}`);
     }
 
   } catch (error) {
-    console.error('Error eliminando usuario:', error);
-  }
-}
-
-// ============================================================================
-// RESTAURAR USUARIO
-// ============================================================================
-
-async function restoreUser(userId) {
-  if (!confirm('¿Restaurar usuario?')) {
-    return;
-  }
-
-  try {
-    const accessToken = localStorage.getItem('access_token');
-
-    const response = await fetch(`/api/users/${userId}/restore`, {
-      method: 'PUT',
-      headers: { 'Authorization': `Bearer ${accessToken}` }
-    });
-
-    if (response.ok) {
-      alert('Usuario restaurado');
-      loadUsers();
-    } else {
-      alert('Error al restaurar usuario');
-    }
-
-  } catch (error) {
-    console.error('Error restaurando usuario:', error);
+    console.error('Error actualizando estado del usuario:', error);
+    alert('Error en la operación');
   }
 }

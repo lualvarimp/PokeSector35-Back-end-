@@ -215,7 +215,7 @@
   }
 }
 
-.btn-delete {
+.btn-disable {
   background-color: var(--red);
   color: var(--white);
   font-weight: 700;
@@ -229,15 +229,15 @@
   }
 }
 
-.btn-restore {
-   background: var(--green-med);
+.btn-enable {
+  background: var(--green-med);
   color: var(--white);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1rem;
 
   &:hover {
-     color: var(--white);
+    color: var(--white);
     animation: blink-logo 5s infinite;
   }
 }
